@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 
 import org.hibernate.annotations.DynamicInsert;
 
+import br.com.villsec.model.entities.enums.TipoElemento;
+
 @Entity
 @DynamicInsert
 public class Elemento extends EntidadeDominio {
@@ -15,20 +17,22 @@ public class Elemento extends EntidadeDominio {
 
 	private String descricao;
 	private URI elemento;
-	private Integer tipo;
+	private Integer tipoElemento;
 	private String titulo;
+	private Boolean status;
 
 	public Elemento() {
 
 	}
 
 	public Elemento(Long id, Long verificationCode, Date dtCriacao, Date dtUltimaAlteracao, String descricao,
-			URI elemento, Integer tipo, String titulo) {
+			URI elemento, TipoElemento tipoElemento, String titulo, Boolean status) {
 		super(id, verificationCode, dtCriacao, dtUltimaAlteracao);
 		this.descricao = descricao;
 		this.elemento = elemento;
-		this.tipo = tipo;
+		this.tipoElemento = (tipoElemento == null) ? null : tipoElemento.getCodigo();
 		this.titulo = titulo;
+		this.status = status;
 	}
 
 	public String getDescricao() {
@@ -47,12 +51,12 @@ public class Elemento extends EntidadeDominio {
 		this.elemento = elemento;
 	}
 
-	public Integer getTipo() {
-		return tipo;
+	public TipoElemento getTipoElemento() {
+		return TipoElemento.toEnum(tipoElemento);
 	}
 
-	public void setTipo(Integer tipo) {
-		this.tipo = tipo;
+	public void setTipoElemento(TipoElemento tipoElemento) {
+		this.tipoElemento = tipoElemento.getCodigo();
 	}
 
 	public String getTitulo() {
@@ -61,5 +65,13 @@ public class Elemento extends EntidadeDominio {
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 }
