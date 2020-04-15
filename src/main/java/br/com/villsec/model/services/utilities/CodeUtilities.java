@@ -2,6 +2,8 @@ package br.com.villsec.model.services.utilities;
 
 import org.springframework.stereotype.Component;
 
+import br.com.villsec.model.services.UserLoggedInService;
+
 @Component
 public class CodeUtilities {
 
@@ -20,4 +22,10 @@ public class CodeUtilities {
 		return code;
 	}
 
+	public String geradorDeMatricula(UserLoggedInService theUserLoggedInService) {
+		String code = codeGenerator(10, 6, 10);
+		if (theUserLoggedInService.IsThereMatricula(code))
+			geradorDeMatricula(theUserLoggedInService);
+		return code;
+	}
 }

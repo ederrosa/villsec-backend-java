@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.villsec.model.entities.domain.Album;
 
 @Repository
-public interface IAlbum extends JpaRepository<Album, Long>{
+public interface IAlbumRepository extends JpaRepository<Album, Long>{
 
 	@Transactional(readOnly = true)
 	Album findByNome(String nome);

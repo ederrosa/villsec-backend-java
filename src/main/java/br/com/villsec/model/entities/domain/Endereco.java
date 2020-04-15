@@ -12,12 +12,6 @@ public class Endereco extends EntidadeDominio {
 	private String logradouro;
 
 	@Column(columnDefinition = "VARCHAR(10)")
-	private String numeroDomicilio;
-
-	@Column(columnDefinition = "VARCHAR(50)")
-	private String complemento;
-
-	@Column(columnDefinition = "VARCHAR(10)")
 	private String cep;
 
 	@Column(columnDefinition = "VARCHAR(50)")
@@ -36,12 +30,9 @@ public class Endereco extends EntidadeDominio {
 
 	}
 
-	public Endereco(Long id, String logradouro, String numeroDomicilio, String complemento, String cep, String bairro,
-			String cidade, String estado, String pais) {
+	public Endereco(Long id, String logradouro, String cep, String bairro, String cidade, String estado, String pais) {
 		super(id);
 		this.logradouro = logradouro;
-		this.numeroDomicilio = numeroDomicilio;
-		this.complemento = complemento;
 		this.cep = cep;
 		this.bairro = bairro;
 		this.cidade = cidade;
@@ -56,22 +47,6 @@ public class Endereco extends EntidadeDominio {
 
 	public void setLogradouro(String logradouro) {
 		this.logradouro = logradouro;
-	}
-
-	public String getNumeroDomicilio() {
-		return numeroDomicilio;
-	}
-
-	public void setNumeroDomicilio(String numeroDomicilio) {
-		this.numeroDomicilio = numeroDomicilio;
-	}
-
-	public String getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
 	}
 
 	public String getCep() {

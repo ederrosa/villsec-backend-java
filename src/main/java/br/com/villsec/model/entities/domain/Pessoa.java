@@ -1,5 +1,6 @@
 package br.com.villsec.model.entities.domain;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -37,6 +38,8 @@ public abstract class Pessoa extends EntidadeDominio {
 
 	@Column(columnDefinition = "TINYINT(1) default '1'")
 	private Boolean statusPessoa;
+	
+	private Date dataNascimento;
 
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
@@ -60,7 +63,7 @@ public abstract class Pessoa extends EntidadeDominio {
 	}
 
 	public Pessoa(Long id, String nome, String genero, Boolean statusPessoa, AutenticacaoSS theAutenticacaoSS,
-			Email theEmail, Endereco theEndereco) {
+			Email theEmail, Endereco theEndereco, Date dataNascimento) {
 		super(id);
 		this.nome = nome;
 		this.genero = genero;
@@ -68,6 +71,7 @@ public abstract class Pessoa extends EntidadeDominio {
 		this.theAutenticacaoSS = theAutenticacaoSS;
 		this.theEmail = theEmail;
 		this.theEndereco = theEndereco;
+		this.dataNascimento = dataNascimento;
 
 	}
 
@@ -93,6 +97,14 @@ public abstract class Pessoa extends EntidadeDominio {
 
 	public void setStatusPessoa(Boolean statusPessoa) {
 		this.statusPessoa = statusPessoa;
+	}
+	
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 	public AutenticacaoSS getTheAutenticacaoSS() {

@@ -1,5 +1,7 @@
 package br.com.villsec.model.entities.domain;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -14,8 +16,8 @@ public class Seguidor extends Pessoa {
 	}
 
 	public Seguidor(Long id, String nome, String genero, Boolean statusPessoa, AutenticacaoSS theAutenticacaoSS,
-			Email theEmail, Endereco theEndereco) {
-		super(id, nome, genero, statusPessoa, theAutenticacaoSS, theEmail, theEndereco);
+			Email theEmail, Endereco theEndereco, Date dataNascimento) {
+		super(id, nome, genero, statusPessoa, theAutenticacaoSS, theEmail, theEndereco, dataNascimento);
 		// TODO Auto-generated constructor stub
 	}
 

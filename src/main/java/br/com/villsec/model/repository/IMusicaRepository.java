@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.villsec.model.entities.domain.Musica;
 
 @Repository
-public interface IMusica  extends JpaRepository<Musica, Long>{
+public interface IMusicaRepository  extends JpaRepository<Musica, Long>{
 
 	@Transactional(readOnly = true)
 	Musica findByNome(String nome);

@@ -1,5 +1,7 @@
 package br.com.villsec.model.entities.domain;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -10,24 +12,24 @@ public class Proprietario extends Pessoa{
 
 	private static final long serialVersionUID = 1L;
 
-	private String sobreMin;
+	private String sobreMim;
 
 	public Proprietario() {
 		
 	}
-
+	
 	public Proprietario(Long id, String nome, String genero, Boolean statusPessoa, AutenticacaoSS theAutenticacaoSS,
-			Email theEmail, Endereco theEndereco, String sobreMim) {
-		super(id, nome, genero, statusPessoa, theAutenticacaoSS, theEmail, theEndereco);
-		this.sobreMin = sobreMim;
+			Email theEmail, Endereco theEndereco, Date dataNascimento, String sobreMim) {
+		super(id, nome, genero, statusPessoa, theAutenticacaoSS, theEmail, theEndereco, dataNascimento);
+		this.sobreMim = sobreMim;
 	}
 
-	public String getSobreMin() {
-		return sobreMin;
+	public String getSobreMim() {
+		return sobreMim;
 	}
 
-	public void setSobreMin(String sobreMin) {
-		this.sobreMin = sobreMin;
+	public void setSobreMin(String sobreMim) {
+		this.sobreMim = sobreMim;
 	}	
 	
 }
