@@ -1,5 +1,6 @@
 package br.com.villsec.model.services;
 
+import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
@@ -20,7 +21,7 @@ import br.com.villsec.model.repository.IEventoRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
 import br.com.villsec.model.services.exceptions.DataIntegrityException;
 import br.com.villsec.model.services.exceptions.ObjectNotFoundException;
-import br.com.villsec.model.services.utilities.FileUtilities;
+import br.com.villsec.model.services.utilities.ImageUtilities;
 
 @Service
 public class EventoServices {
@@ -32,10 +33,13 @@ public class EventoServices {
 	private S3Service theS3Service;
 
 	@Autowired
-	private FileUtilities theFileUtilities;
+	private ImageUtilities theImageUtilities;
 
-	@Value("${prefix.elemento.profile}")
+	@Value("${prefix.evento.profile}")
 	private String prefix;
+
+	@Value("${img.profile.size}")
+	private Integer size;
 
 	@Transactional
 	public Evento insert(Evento theEntidade, MultipartFile theMultipartFile) {
@@ -45,10 +49,15 @@ public class EventoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
+		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		jpgImage = theImageUtilities.cropSquare(jpgImage);
+		jpgImage = theImageUtilities.resize(jpgImage, size);
 		File theFile = new File(null,
 				prefix + "/" + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome() + "."
 						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
-				theS3Service.uploadFile(theFileUtilities.getInputStream(theMultipartFile),
+				theS3Service.uploadFile(
+						theImageUtilities.getInputStream(jpgImage,
+								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 						theEntidade.getFolder().getNome(), theMultipartFile.getContentType()));
 		theEntidade.setFolder(theFile);
 		return theEventoRepository.save(theEntidade);
@@ -74,10 +83,15 @@ public class EventoServices {
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			theS3Service.deleteFile(theEntidade.getFolder().getNome());
+			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
+			jpgImage = theImageUtilities.cropSquare(jpgImage);
+			jpgImage = theImageUtilities.resize(jpgImage, size);
 			File theFile = new File(null,
 					prefix + "/" + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome() + "."
 							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
-					theS3Service.uploadFile(theFileUtilities.getInputStream(theMultipartFile),
+					theS3Service.uploadFile(
+							theImageUtilities.getInputStream(jpgImage,
+									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 							theEntidade.getFolder().getNome(), theMultipartFile.getContentType()));
 			theEntidade.setFolder(theFile);
 		}
