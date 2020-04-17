@@ -2,6 +2,7 @@ package br.com.villsec.model.services.utilities;
 
 import org.springframework.stereotype.Component;
 
+import br.com.villsec.model.repository.IAlbumRepository;
 import br.com.villsec.model.services.UserLoggedInService;
 
 @Component
@@ -26,6 +27,13 @@ public class CodeUtilities {
 		String code = codeGenerator(10, 6, 10);
 		if (theUserLoggedInService.IsThereMatricula(code))
 			geradorDeMatricula(theUserLoggedInService);
+		return code;
+	}
+	
+	public String codigoAlbum(IAlbumRepository theAlbumRepository) {
+		String code = codeGenerator(10, 4, 100);
+		if (theAlbumRepository.findByCodigo(code) != null)
+			codigoAlbum(theAlbumRepository);
 		return code;
 	}
 }
