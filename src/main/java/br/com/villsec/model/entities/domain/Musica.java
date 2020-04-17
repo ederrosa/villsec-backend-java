@@ -1,9 +1,9 @@
 package br.com.villsec.model.entities.domain;
 
-import java.net.URI;
-import java.util.Date;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
 
@@ -18,7 +18,9 @@ public class Musica extends EntidadeDominio {
 	private String autor;
 	private String coautor;
 	private Integer duracao;
-	private URI arquivo;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "File_ID")
+	private File arquivo;
 	private Boolean copyright;
 	private String idioma;
 
@@ -26,9 +28,9 @@ public class Musica extends EntidadeDominio {
 
 	}
 
-	public Musica(Long id, Long verificationCode, Date dtCriacao, Date dtUltimaAlteracao, String nome, Integer bpm,
-			String autor, String coautor, Integer duracao, URI arquivo, Boolean copyright, String idioma) {
-		super(id, verificationCode, dtCriacao, dtUltimaAlteracao);
+	public Musica(Long id, String nome, Integer bpm, String autor, String coautor, Integer duracao, File arquivo,
+			Boolean copyright, String idioma) {
+		super(id);
 		this.nome = nome;
 		this.bpm = bpm;
 		this.autor = autor;
@@ -79,11 +81,11 @@ public class Musica extends EntidadeDominio {
 		this.duracao = duracao;
 	}
 
-	public URI getArquivo() {
+	public File getArquivo() {
 		return arquivo;
 	}
 
-	public void setArquivo(URI arquivo) {
+	public void setArquivo(File arquivo) {
 		this.arquivo = arquivo;
 	}
 
@@ -101,5 +103,5 @@ public class Musica extends EntidadeDominio {
 
 	public void setIdioma(String idioma) {
 		this.idioma = idioma;
-	}	
+	}
 }

@@ -1,6 +1,5 @@
 package br.com.villsec.model.entities.domain;
 
-import java.net.URI;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -22,7 +21,9 @@ public class Evento extends EntidadeDominio {
 	private String duracao;
 	private Date data;
 	private String descricao;
-	private URI folder;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "File_ID")
+	private File folder;
 	private String nome;
 	private Integer tipoEvento;
 	@OneToOne(cascade = CascadeType.ALL)
@@ -33,10 +34,9 @@ public class Evento extends EntidadeDominio {
 
 	}
 
-	public Evento(Long id, Long verificationCode, Date dtCriacao, Date dtUltimaAlteracao, String classificacao,
-			String duracao, Date data, String descricao, URI folder, String nome, TipoEvento tipoEvento,
-			Endereco theEndereco) {
-		super(id, verificationCode, dtCriacao, dtUltimaAlteracao);
+	public Evento(Long id, String classificacao, String duracao, Date data, String descricao, File folder, String nome,
+			TipoEvento tipoEvento, Endereco theEndereco) {
+		super(id);
 		this.classificacao = classificacao;
 		this.duracao = duracao;
 		this.data = data;
@@ -79,11 +79,11 @@ public class Evento extends EntidadeDominio {
 		this.descricao = descricao;
 	}
 
-	public URI getFolder() {
+	public File getFolder() {
 		return folder;
 	}
 
-	public void setFolder(URI folder) {
+	public void setFolder(File folder) {
 		this.folder = folder;
 	}
 

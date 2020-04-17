@@ -1,9 +1,9 @@
 package br.com.villsec.model.entities.domain;
 
-import java.net.URI;
-import java.util.Date;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
 
@@ -16,7 +16,9 @@ public class Elemento extends EntidadeDominio {
 	private static final long serialVersionUID = 1L;
 
 	private String descricao;
-	private URI elemento;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "File_ID")
+	private File elemento;
 	private Integer tipoElemento;
 	private String titulo;
 	private Boolean status;
@@ -25,9 +27,9 @@ public class Elemento extends EntidadeDominio {
 
 	}
 
-	public Elemento(Long id, Long verificationCode, Date dtCriacao, Date dtUltimaAlteracao, String descricao,
-			URI elemento, TipoElemento tipoElemento, String titulo, Boolean status) {
-		super(id, verificationCode, dtCriacao, dtUltimaAlteracao);
+	public Elemento(Long id, String descricao, File elemento, TipoElemento tipoElemento, String titulo,
+			Boolean status) {
+		super(id);
 		this.descricao = descricao;
 		this.elemento = elemento;
 		this.tipoElemento = (tipoElemento == null) ? null : tipoElemento.getCodigo();
@@ -43,11 +45,11 @@ public class Elemento extends EntidadeDominio {
 		this.descricao = descricao;
 	}
 
-	public URI getElemento() {
+	public File getElemento() {
 		return elemento;
 	}
 
-	public void setElemento(URI elemento) {
+	public void setElemento(File elemento) {
 		this.elemento = elemento;
 	}
 

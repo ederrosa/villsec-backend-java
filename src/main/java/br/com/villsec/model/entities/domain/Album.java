@@ -1,7 +1,5 @@
 package br.com.villsec.model.entities.domain;
 
-import java.net.URI;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -9,16 +7,19 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @DynamicInsert
-public class Album extends EntidadeDominio{
+public class Album extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
 	private String ano;
-	private URI capa;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "File_ID")
+	private File capa;
 	private String codigo;
 	private String genero;
 	private String nome;
@@ -29,9 +30,8 @@ public class Album extends EntidadeDominio{
 	public Album() {
 	}
 
-	public Album(Long id, Long verificationCode, Date dtCriacao, Date dtUltimaAlteracao, String ano, URI capa,
-			String codigo, String genero, String nome, Set<Musica> theMusicas) {
-		super(id, verificationCode, dtCriacao, dtUltimaAlteracao);
+	public Album(Long id, String ano, File capa, String codigo, String genero, String nome, Set<Musica> theMusicas) {
+		super(id);
 		this.ano = ano;
 		this.capa = capa;
 		this.codigo = codigo;
@@ -48,11 +48,11 @@ public class Album extends EntidadeDominio{
 		this.ano = ano;
 	}
 
-	public URI getCapa() {
+	public File getCapa() {
 		return capa;
 	}
 
-	public void setCapa(URI capa) {
+	public void setCapa(File capa) {
 		this.capa = capa;
 	}
 
@@ -86,6 +86,6 @@ public class Album extends EntidadeDominio{
 
 	public void setTheMusicas(Set<Musica> theMusicas) {
 		this.theMusicas = theMusicas;
-	}	
+	}
 
 }
