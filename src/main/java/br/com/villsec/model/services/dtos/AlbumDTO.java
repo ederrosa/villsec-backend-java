@@ -19,6 +19,11 @@ public class AlbumDTO extends EntidadeDominio{
 	}
 	
 	public AlbumDTO(Album theAlbum) {
+		super(
+				theAlbum.getId(),
+				theAlbum.getVerificationCode(), 
+				theAlbum.getDtCriacao(),
+				theAlbum.getDtUltimaAlteracao());
 		this.ano = theAlbum.getAno();
 		this.capaNome = theAlbum.getCapa().getNome();
 		this.capaUrl = theAlbum.getCapa().getUrl().toString();
