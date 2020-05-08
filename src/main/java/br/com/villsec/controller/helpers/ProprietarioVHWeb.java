@@ -1,5 +1,6 @@
 package br.com.villsec.controller.helpers;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -30,22 +31,26 @@ public class ProprietarioVHWeb {
 
 		Email theEmail = new Email(null, objDTO.getEmail());
 
-		Endereco theEndereco = new Endereco(null, objDTO.getLogradouro(), 
-				 objDTO.getCep(), objDTO.getBairro(), objDTO.getCidade(), objDTO.getEstado(),
-				objDTO.getPais());
+		Endereco theEndereco = new Endereco(null, objDTO.getLogradouro(), objDTO.getCep(), objDTO.getBairro(),
+				objDTO.getCidade(), objDTO.getEstado(), objDTO.getPais());
 
-		Proprietario theProprietario = new Proprietario(null, objDTO.getNome(), objDTO.getGenero(), true, theAutenticacaoSS, theEmail,
-				theEndereco, (objDTO.getDataNascimento() == null || objDTO.getDataNascimento().isEmpty()) ? null
-						: DateUtilities.dateFormat(objDTO.getDataNascimento()), objDTO.getSobreMim());
+		Proprietario theProprietario = new Proprietario(null, objDTO.getNome(), objDTO.getGenero(), true,
+				theAutenticacaoSS, theEmail, theEndereco,
+				(objDTO.getDataNascimento() == null || objDTO.getDataNascimento().isEmpty()) ? null
+						: DateUtilities.dateFormat(objDTO.getDataNascimento()),
+				objDTO.getSobreMim(), URI.create(objDTO.getFacebook()), URI.create(objDTO.getInstagram()),
+				URI.create(objDTO.getSpotyfy()), URI.create(objDTO.getTwitter()), URI.create(objDTO.getTwitch()));
 
 		theProprietario.setTheTelefones(new LinkedHashSet<Telefone>());
 		if (objDTO.getTipoTelefone1() != null) {
-			theProprietario.getTheTelefones().add(new Telefone(null, objDTO.getNumeroTelefone1(),
-					(objDTO.getTipoTelefone1() == null) ? null : TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone1()))));
+			theProprietario.getTheTelefones()
+					.add(new Telefone(null, objDTO.getNumeroTelefone1(), (objDTO.getTipoTelefone1() == null) ? null
+							: TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone1()))));
 		}
 		if (objDTO.getTipoTelefone2() != null) {
-			theProprietario.getTheTelefones().add(new Telefone(null, objDTO.getNumeroTelefone2(),
-					(objDTO.getTipoTelefone2() == null) ? null : TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone2()))));
+			theProprietario.getTheTelefones()
+					.add(new Telefone(null, objDTO.getNumeroTelefone2(), (objDTO.getTipoTelefone2() == null) ? null
+							: TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone2()))));
 		}
 
 		return theProprietario;
@@ -58,17 +63,20 @@ public class ProprietarioVHWeb {
 						? theProprietario.getTheAutenticacaoSS().getSenha()
 						: new BCryptPasswordEncoder().encode(objDTO.getSenha()));
 		theProprietario.getTheAutenticacaoSS()
-				.setLogin((objDTO.getEmail() == null || objDTO.getEmail().isEmpty()) ? theProprietario.getTheEmail().getEmail()
+				.setLogin((objDTO.getEmail() == null || objDTO.getEmail().isEmpty())
+						? theProprietario.getTheEmail().getEmail()
 						: objDTO.getEmail());
 		theProprietario.getTheEmail()
-				.setEmail((objDTO.getEmail() == null || objDTO.getEmail().isEmpty()) ? theProprietario.getTheEmail().getEmail()
+				.setEmail((objDTO.getEmail() == null || objDTO.getEmail().isEmpty())
+						? theProprietario.getTheEmail().getEmail()
 						: objDTO.getEmail());
 		theProprietario.getTheEndereco()
 				.setLogradouro((objDTO.getLogradouro() == null || objDTO.getLogradouro().isEmpty())
 						? theProprietario.getTheEndereco().getLogradouro()
 						: objDTO.getLogradouro());
 		theProprietario.getTheEndereco()
-				.setCep((objDTO.getCep() == null || objDTO.getCep().isEmpty()) ? theProprietario.getTheEndereco().getCep()
+				.setCep((objDTO.getCep() == null || objDTO.getCep().isEmpty())
+						? theProprietario.getTheEndereco().getCep()
 						: objDTO.getCep());
 		theProprietario.getTheEndereco()
 				.setBairro((objDTO.getBairro() == null || objDTO.getBairro().isEmpty())
@@ -83,7 +91,8 @@ public class ProprietarioVHWeb {
 						? theProprietario.getTheEndereco().getEstado()
 						: objDTO.getEstado());
 		theProprietario.getTheEndereco()
-				.setPais((objDTO.getPais() == null || objDTO.getPais().isEmpty()) ? theProprietario.getTheEndereco().getPais()
+				.setPais((objDTO.getPais() == null || objDTO.getPais().isEmpty())
+						? theProprietario.getTheEndereco().getPais()
 						: objDTO.getPais());
 		List<Telefone> theTelefones = new ArrayList<>();
 		for (Telefone x : theProprietario.getTheTelefones()) {
@@ -94,29 +103,31 @@ public class ProprietarioVHWeb {
 		if (objDTO.getNumeroTelefone1() != null) {
 			if (theTelefones.get(0).getId() != null) {
 				theTelefones.get(0).setNumeroTelefone(objDTO.getNumeroTelefone1());
-				theTelefones.get(0).setTipoTelefone(
-						(objDTO.getTipoTelefone1() == null) ? null : TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone1())));
+				theTelefones.get(0).setTipoTelefone((objDTO.getTipoTelefone1() == null) ? null
+						: TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone1())));
 			}
 		}
 		if (objDTO.getNumeroTelefone2() != null) {
 			if (theTelefones.get(1).getId() != null) {
 				theTelefones.get(1).setNumeroTelefone(objDTO.getNumeroTelefone2());
-				theTelefones.get(1).setTipoTelefone(
-						(objDTO.getTipoTelefone2() == null) ? null : TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone2())));
+				theTelefones.get(1).setTipoTelefone((objDTO.getTipoTelefone2() == null) ? null
+						: TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone2())));
 			}
 		}
 		theProprietario.setTheTelefones(new LinkedHashSet<>());
 		theProprietario.getTheTelefones().addAll(theTelefones);
-		theProprietario.setNome(
-				(objDTO.getNome() == null || objDTO.getNome().isEmpty()) ? theProprietario.getNome() : objDTO.getNome());
-		theProprietario.setGenero((objDTO.getGenero() == null || objDTO.getGenero().isEmpty()) ? theProprietario.getGenero()
-				: objDTO.getGenero());
+		theProprietario.setNome((objDTO.getNome() == null || objDTO.getNome().isEmpty()) ? theProprietario.getNome()
+				: objDTO.getNome());
+		theProprietario
+				.setGenero((objDTO.getGenero() == null || objDTO.getGenero().isEmpty()) ? theProprietario.getGenero()
+						: objDTO.getGenero());
 		theProprietario.setStatusPessoa(
 				(objDTO.getStatusPessoa() == null) ? theProprietario.getStatusPessoa() : objDTO.getStatusPessoa());
 		theProprietario.setDataNascimento((objDTO.getDataNascimento() == null) ? theProprietario.getDataNascimento()
 				: DateUtilities.dateFormat(objDTO.getDataNascimento()));
 		theProprietario.setSobreMin(
-				(objDTO.getSobreMim() == null || objDTO.getSobreMim().isEmpty()) ? theProprietario.getSobreMim() : objDTO.getSobreMim());
-	
-		}
+				(objDTO.getSobreMim() == null || objDTO.getSobreMim().isEmpty()) ? theProprietario.getSobreMim()
+						: objDTO.getSobreMim());
+
+	}
 }

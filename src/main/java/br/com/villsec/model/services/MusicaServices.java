@@ -52,13 +52,13 @@ public class MusicaServices {
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
-		File theFile = new File(null,
-				prefix + "/" + theEntidade.getAutor() +"/" + theEntidade.getNome() + "."
-						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
+		String fileName = prefix + theEntidade.getAutor() + "/" + theEntidade.getNome() + "."
+				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		File theFile = new File(null, fileName,
 				theS3Service.uploadFile(
 						theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						theEntidade.getArquivo().getNome(), theMultipartFile.getContentType()));
+						fileName, theMultipartFile.getContentType()));
 		theEntidade.setArquivo(theFile);
 		return theMusicaRepository.save(theEntidade);
 	}
@@ -86,13 +86,13 @@ public class MusicaServices {
 			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 			jpgImage = theImageUtilities.cropSquare(jpgImage);
 			jpgImage = theImageUtilities.resize(jpgImage, size);
-			File theFile = new File(null,
-					prefix + "/" + theEntidade.getAutor() +"/" + theEntidade.getNome() + "."
-							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
+			String fileName = prefix + theEntidade.getAutor() + "/" + theEntidade.getNome() + "."
+					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+			File theFile = new File(null, fileName,
 					theS3Service.uploadFile(
 							theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-							theEntidade.getArquivo().getNome(), theMultipartFile.getContentType()));
+							fileName, theMultipartFile.getContentType()));
 			theEntidade.setArquivo(theFile);
 		}
 		return theMusicaRepository.save(theEntidade);

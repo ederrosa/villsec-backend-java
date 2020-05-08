@@ -63,6 +63,11 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private String dataNascimento;
 	private String sobreMim;
+	private String facebook;
+	private String instagram;
+	private String spotyfy;
+	private String twitter;
+	private String twitch;
 
 	public ProprietarioDTO() {
 
@@ -99,6 +104,11 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 			this.tipoTelefone2 = list.get(1).getTipoTelefone().getDescricao();
 		}
 		this.sobreMim = theProprietario.getSobreMim();
+		this.facebook = theProprietario.getFacebook().toString();
+		this.instagram = theProprietario.getInstagram().toString();
+		this.spotyfy = theProprietario.getSpotyfy().toString();
+		this.twitter = theProprietario.getTwitter().toString();
+		this.twitch = theProprietario.getTwitch().toString();
 	}
 
 	public String getSenha() {
@@ -267,5 +277,45 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 
 	public void setSobreMim(String sobreMim) {
 		this.sobreMim = sobreMim;
+	}
+
+	public String getFacebook() {
+		return facebook;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
+	}
+
+	public String getInstagram() {
+		return instagram;
+	}
+
+	public void setInstagram(String instagram) {
+		this.instagram = instagram;
+	}
+
+	public String getSpotyfy() {
+		return spotyfy;
+	}
+
+	public void setSpotyfy(String spotyfy) {
+		this.spotyfy = spotyfy;
+	}
+
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public String getTwitch() {
+		return twitch;
+	}
+
+	public void setTwitch(String twitch) {
+		this.twitch = twitch;
 	}	
 }

@@ -45,11 +45,10 @@ public class ElementoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		File theFile = new File(null,
-				prefix + "/" + theEntidade.getTipoElemento().getDescricao() + "/" + theEntidade.getTitulo() + "."
-						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
-				theS3Service.uploadFile(theFileUtilities.getInputStream(theMultipartFile),
-						theEntidade.getElemento().getNome(), theMultipartFile.getContentType()));
+		String fileName = prefix + theEntidade.getTipoElemento().getDescricao() + "/" + theEntidade.getTitulo()
+				+ "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		File theFile = new File(null, fileName, theS3Service.uploadFile(
+				theFileUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 		theEntidade.setElemento(theFile);
 		return theElementoRepository.save(theEntidade);
 	}
@@ -74,11 +73,11 @@ public class ElementoServices {
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			theS3Service.deleteFile(theEntidade.getElemento().getNome());
-			File theFile = new File(null,
-					prefix + "/" + theEntidade.getTipoElemento().getDescricao() + "/" + theEntidade.getTitulo() + "."
-							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
-					theS3Service.uploadFile(theFileUtilities.getInputStream(theMultipartFile),
-							theEntidade.getElemento().getNome(), theMultipartFile.getContentType()));
+			String fileName = prefix + theEntidade.getTipoElemento().getDescricao() + "/"
+					+ theEntidade.getTitulo() + "."
+					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+			File theFile = new File(null, fileName, theS3Service.uploadFile(
+					theFileUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 			theEntidade.setElemento(theFile);
 		}
 		return theElementoRepository.save(theEntidade);

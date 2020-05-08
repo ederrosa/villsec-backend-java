@@ -49,18 +49,19 @@ public class AlbumServices {
 				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
+
 		theEntidade.setId(null);
 		theEntidade.setCodigo(new CodeUtilities().codigoAlbum(theAlbumRepository));
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
-		File theFile = new File(null,
-				prefix + "/" + theEntidade.getGenero() + "/" + theEntidade.getCodigo() +"/" + theEntidade.getNome() + "."
-						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
+		String fileName = prefix + theEntidade.getGenero() + "/" + theEntidade.getCodigo() + "/" + theEntidade.getNome()
+				+ "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		File theFile = new File(null, fileName,
 				theS3Service.uploadFile(
 						theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						theEntidade.getCapa().getNome(), theMultipartFile.getContentType()));
+						fileName, theMultipartFile.getContentType()));
 		theEntidade.setCapa(theFile);
 		return theAlbumRepository.save(theEntidade);
 	}
@@ -83,19 +84,18 @@ public class AlbumServices {
 				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		theEntidade.setCodigo(new CodeUtilities().codigoAlbum(theAlbumRepository));
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			theS3Service.deleteFile(theEntidade.getCapa().getNome());
 			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 			jpgImage = theImageUtilities.cropSquare(jpgImage);
 			jpgImage = theImageUtilities.resize(jpgImage, size);
-			File theFile = new File(null,
-					prefix + "/" + theEntidade.getGenero() + "/" + theEntidade.getCodigo() +"/" + theEntidade.getNome() + "."
-							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
+			String fileName = prefix + theEntidade.getGenero() + "/" + theEntidade.getCodigo() + "/"
+					+ theEntidade.getNome() + "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+			File theFile = new File(null, fileName,
 					theS3Service.uploadFile(
 							theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-							theEntidade.getCapa().getNome(), theMultipartFile.getContentType()));
+							fileName, theMultipartFile.getContentType()));
 			theEntidade.setCapa(theFile);
 		}
 		return theAlbumRepository.save(theEntidade);

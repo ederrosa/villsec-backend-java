@@ -52,13 +52,13 @@ public class EventoServices {
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
-		File theFile = new File(null,
-				prefix + "/" + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome() + "."
-						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
+		String fileName = prefix + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome() + "."
+				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		File theFile = new File(null, fileName,
 				theS3Service.uploadFile(
 						theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						theEntidade.getFolder().getNome(), theMultipartFile.getContentType()));
+						fileName, theMultipartFile.getContentType()));
 		theEntidade.setFolder(theFile);
 		return theEventoRepository.save(theEntidade);
 	}
@@ -86,13 +86,13 @@ public class EventoServices {
 			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 			jpgImage = theImageUtilities.cropSquare(jpgImage);
 			jpgImage = theImageUtilities.resize(jpgImage, size);
-			File theFile = new File(null,
-					prefix + "/" + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome() + "."
-							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()),
+			String fileName = prefix + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome()
+					+ "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+			File theFile = new File(null, fileName,
 					theS3Service.uploadFile(
 							theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-							theEntidade.getFolder().getNome(), theMultipartFile.getContentType()));
+							fileName, theMultipartFile.getContentType()));
 			theEntidade.setFolder(theFile);
 		}
 		return theEventoRepository.save(theEntidade);
