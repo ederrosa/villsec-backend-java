@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.villsec.model.entities.domain.Evento;
-import br.com.villsec.model.entities.domain.File;
+import br.com.villsec.model.entities.domain.Arquivo;
 import br.com.villsec.model.entities.enums.Perfil;
 import br.com.villsec.model.repository.IEventoRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
@@ -38,7 +38,7 @@ public class EventoServices {
 	@Value("${prefix.evento.profile}")
 	private String prefix;
 
-	@Value("${img.profile.size}")
+	@Value("${image.size}")
 	private Integer size;
 
 	@Transactional
@@ -54,7 +54,7 @@ public class EventoServices {
 		jpgImage = theImageUtilities.resize(jpgImage, size);
 		String fileName = prefix + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome() + "."
 				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-		File theFile = new File(null, fileName,
+		Arquivo theFile = new Arquivo(null, fileName,
 				theS3Service.uploadFile(
 						theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
@@ -88,7 +88,7 @@ public class EventoServices {
 			jpgImage = theImageUtilities.resize(jpgImage, size);
 			String fileName = prefix + theEntidade.getTipoEvento().getDescricao() + "/" + theEntidade.getNome()
 					+ "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			File theFile = new File(null, fileName,
+			Arquivo theFile = new Arquivo(null, fileName,
 					theS3Service.uploadFile(
 							theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),

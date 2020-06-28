@@ -10,8 +10,8 @@ import br.com.villsec.model.entities.domain.AutenticacaoSS;
 import br.com.villsec.model.entities.domain.Seguidor;
 
 @Repository
-public interface ISeguidorRepository extends JpaRepository<Seguidor, Long>{
-	
+public interface ISeguidorRepository extends JpaRepository<Seguidor, Long> {
+
 	@Transactional(readOnly = true)
 	Seguidor findByTheEmailEmail(String theEmail);
 

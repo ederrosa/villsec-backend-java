@@ -17,51 +17,53 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.villsec.controller.helpers.ElementoVHWeb;
-import br.com.villsec.model.entities.domain.Elemento;
-import br.com.villsec.model.services.ElementoServices;
-import br.com.villsec.model.services.dtos.ElementoDTO;
+import br.com.villsec.controller.helpers.VideoVHWeb;
+import br.com.villsec.model.entities.domain.Video;
+import br.com.villsec.model.services.VideoServices;
+import br.com.villsec.model.services.dtos.VideoDTO;
 
 @RestController
-@RequestMapping(value = "/elementos")
-public class ElementoRC {
+@RequestMapping(value = "/videos")
+public class VideoRC {
 
 	@Autowired
-	private ElementoServices theElementoServices;
+	private VideoServices theElementoServices;
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid ElementoDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theElementoServices.insert(new ElementoVHWeb().create(objNewDTO), theMultipartFile).getId())
+	public ResponseEntity<Void> insert(@Valid VideoDTO objNewDTO,
+			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile,
+			@RequestParam(value = "galeriaID") String theGaleria) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theElementoServices
+				.insert(new VideoVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theGaleria)).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<ElementoDTO> find(@PathVariable Long id) {
-		ElementoDTO obj = new ElementoDTO(theElementoServices.find(id));
+	public ResponseEntity<VideoDTO> find(@PathVariable Long id) {
+		VideoDTO obj = new VideoDTO(theElementoServices.find(id));
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Page<ElementoDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<VideoDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "titulo") String orderBy,
-			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-		Page<Elemento> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction);
-		Page<ElementoDTO> listDTO = list.map(obj -> new ElementoDTO(obj));
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "theGaleria") Long theGaleria) {
+		Page<Video> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction, theGaleria);
+		Page<VideoDTO> listDTO = list.map(obj -> new VideoDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid ElementoDTO objDTO, @PathVariable Long id,
+	public ResponseEntity<Void> update(@Valid VideoDTO objDTO, @PathVariable Long id,
 			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile) {
 		objDTO.setId(id);
-		Elemento theElemento = theElementoServices.find(id);
-		new ElementoVHWeb().update(theElemento, objDTO);
+		Video theElemento = theElementoServices.find(id);
+		new VideoVHWeb().update(theElemento, objDTO);
 		theElemento = theElementoServices.update(theElemento, theMultipartFile);
 		return ResponseEntity.noContent().build();
 	}

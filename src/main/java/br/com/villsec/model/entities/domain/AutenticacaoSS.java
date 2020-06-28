@@ -24,34 +24,34 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
+	@Transient
+	private Collection<? extends GrantedAuthority> authorities;
 	@Column(unique = true, columnDefinition = "VARCHAR(50)")
 	private String login;
 	@Column(unique = true, columnDefinition = "VARCHAR(20)")
 	private String matricula;
-	private String senha;
+	private String nomeImgPerfil;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "PERFIS")
-	private Set<Integer> perfil;
-	private URI uriImgPerfil;
-	private String nomeImgPerfil;
+	private Set<Integer> perfis;
+	private String senha;
 	private Integer tipoUsuario;
-	@Transient
-	private Collection<? extends GrantedAuthority> authorities;
+	private URI uriImgPerfil;
 
 	public AutenticacaoSS() {
 
 	}
 
-	public AutenticacaoSS(Long id, String login, String matricula, String senha, Set<Perfil> perfis,
-			URI uriImgPerfil, String nomeImgPerfil, Perfil tipoUsuario) {
+	public AutenticacaoSS(Long id, String login, String matricula, String nomeImgPerfil, Set<Perfil> perfis,
+			String senha, Perfil tipoUsuario, URI uriImgPerfil) {
 		super(id);
 		this.login = login;
 		this.matricula = matricula;
-		this.senha = senha;
-		this.perfil = perfis.stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
-		this.uriImgPerfil = uriImgPerfil;
 		this.nomeImgPerfil = nomeImgPerfil;
+		this.perfis = perfis.stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
+		this.senha = senha;
 		this.tipoUsuario = (tipoUsuario == null) ? null : tipoUsuario.getCodigo();
+		this.uriImgPerfil = uriImgPerfil;
 		this.authorities = perfis.stream().map(x -> new SimpleGrantedAuthority(x.getRole()))
 				.collect(Collectors.toList());
 	}
@@ -72,36 +72,28 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 		this.matricula = matricula;
 	}
 
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public Set<Perfil> getPerfil() {
-		return perfil.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
-	}
-
-	public void addPerfil(Perfil perfil) {
-		this.perfil.add(perfil.getCodigo());
-	}
-
-	public URI getUriImgPerfil() {
-		return uriImgPerfil;
-	}
-
-	public void setUriImgPerfil(URI uriImgPerfil) {
-		this.uriImgPerfil = uriImgPerfil;
-	}
-
 	public String getNomeImgPerfil() {
 		return nomeImgPerfil;
 	}
 
 	public void setNomeImgPerfil(String nomeImgPerfil) {
 		this.nomeImgPerfil = nomeImgPerfil;
+	}
+
+	public Set<Perfil> getPerfis() {
+		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+	}
+
+	public void addPerfis(Perfil perfil) {
+		this.perfis.add(perfil.getCodigo());
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Perfil getTipoUsuario() {
@@ -112,9 +104,21 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 		this.tipoUsuario = tipoUsuario.getCodigo();
 	}
 
+	public URI getUriImgPerfil() {
+		return uriImgPerfil;
+	}
+
+	public void setUriImgPerfil(URI uriImgPerfil) {
+		this.uriImgPerfil = uriImgPerfil;
+	}
+
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return perfil.stream().map(x -> new SimpleGrantedAuthority(Perfil.toEnum(x).getRole()))
+		return perfis.stream().map(x -> new SimpleGrantedAuthority(Perfil.toEnum(x).getRole()))
 				.collect(Collectors.toList());
 	}
 
@@ -151,5 +155,4 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 	public boolean hasRole(Perfil perfil) {
 		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getRole()));
 	}
-
 }

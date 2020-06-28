@@ -54,7 +54,7 @@ public class SeguidorRC {
 		return ResponseEntity.ok().body(listDTO);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('SEGUIDOR') OR hasAnyRole('PROPRIETARIO')")
+	@PreAuthorize("hasAnyRole('SEGUIDOR')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid SeguidorDTO objDTO, @PathVariable Long id,
 			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile) {
@@ -65,7 +65,7 @@ public class SeguidorRC {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('PROPRIETARIO')")
+	@PreAuthorize("hasAnyRole('SEGUIDOR')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		find(id);

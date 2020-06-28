@@ -43,57 +43,57 @@ public class ProprietarioServices {
 	@Value("${prefix.perfil.profile}")
 	private String prefix;
 
-	@Value("${img.profile.size}")
+	@Value("${image.profile.size}")
 	private Integer size;
-	
+
 	@Transactional
 	public Proprietario insert(Proprietario theProprietario, MultipartFile theMultipartFile) {
 
-		theProprietario.getTheAutenticacaoSS()
-				.setMatricula(new CodeUtilities().geradorDeMatricula(theUserLoggedInService));
-		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = theImageUtilities.cropSquare(jpgImage);
-		jpgImage = theImageUtilities.resize(jpgImage, size);
-		theProprietario.getTheAutenticacaoSS().setNomeImgPerfil(prefix + theProprietario.getTheAutenticacaoSS().getMatricula()
-				+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
-		theProprietario.getTheAutenticacaoSS()
-				.setUriImgPerfil(theS3Service.uploadFile(
-						theImageUtilities.getInputStream(jpgImage,
-								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						theProprietario.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
-		theProprietario = theIProprietarioRepository.save(theProprietario);
-		return theProprietario;
+		if (UserLoggedInService.authenticated() != null
+				&& UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
+			theProprietario.getTheAutenticacaoSS()
+					.setMatricula(new CodeUtilities().geradorDeMatricula(theUserLoggedInService));
+			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
+			jpgImage = theImageUtilities.cropSquare(jpgImage);
+			jpgImage = theImageUtilities.resize(jpgImage, size);
+			theProprietario.getTheAutenticacaoSS()
+					.setNomeImgPerfil(prefix + theProprietario.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
+							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+			theProprietario.getTheAutenticacaoSS()
+					.setUriImgPerfil(theS3Service.uploadFile(
+							theImageUtilities.getInputStream(jpgImage,
+									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
+							theProprietario.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
+			theProprietario = theIProprietarioRepository.save(theProprietario);
+			return theProprietario;
+		}
+		return null;
 	}
 
 	public Proprietario find(Long id) {
 
-		if (UserLoggedInService.authenticated() == null) {
-			throw new AuthorizationException("Acesso negado");
-		}
 		Optional<Proprietario> theProprietario = theIProprietarioRepository.findById(id);
 		return theProprietario.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Proprietario.class.getSimpleName()));
 	}
 
 	public Page<Proprietario> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		if (UserLoggedInService.authenticated() != null) {
-			return theIProprietarioRepository.findAll(pageRequest);
-		} else {
-			throw new AuthorizationException("Acesso negado! - Você não possui permissão para executar esta ação!");
-		}
+		return theIProprietarioRepository.findAll(pageRequest);
 	}
 
 	public Proprietario update(Proprietario theProprietario, MultipartFile theMultipartFile) {
 
-		if (UserLoggedInService.authenticated() != null) {
+		if (UserLoggedInService.authenticated() != null
+				&& theUserLoggedInService.userLoggedIn().getId() == theProprietario.getId()
+				|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 			if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 				BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 				jpgImage = theImageUtilities.cropSquare(jpgImage);
 				jpgImage = theImageUtilities.resize(jpgImage, size);
-				theProprietario.getTheAutenticacaoSS().setNomeImgPerfil(prefix + theProprietario.getTheAutenticacaoSS().getMatricula()
-						+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+				theProprietario.getTheAutenticacaoSS()
+						.setNomeImgPerfil(prefix + theProprietario.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
+								+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
 				theProprietario.getTheAutenticacaoSS()
 						.setUriImgPerfil(
 								theS3Service
@@ -105,20 +105,22 @@ public class ProprietarioServices {
 			}
 			return theIProprietarioRepository.save(theProprietario);
 		} else {
-			throw new AuthorizationException("Acesso negado! - Você não possui permissão para Alterar esta Proprietario!");
+			throw new AuthorizationException(
+					"Acesso negado! - Você não possui permissão para Alterar esta Proprietario!");
 		}
 	}
 
-	public void delete(Long id) {		
-		try {			
+	public void delete(Long id) {
+		try {
 			if (UserLoggedInService.authenticated() != null && theUserLoggedInService.userLoggedIn().getId() == id
-					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {				
+					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
 					theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
 				}
 				theIProprietarioRepository.deleteById(id);
 			} else {
-				throw new AuthorizationException("Acesso negado! - Você não possui permissão para excluir esta Proprietario!");
+				throw new AuthorizationException(
+						"Acesso negado! - Você não possui permissão para excluir esta Proprietario!");
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Proprietarios relacionadas");

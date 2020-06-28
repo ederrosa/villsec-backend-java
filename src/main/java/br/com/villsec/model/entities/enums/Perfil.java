@@ -3,9 +3,8 @@ package br.com.villsec.model.entities.enums;
 public enum Perfil {
 	
 	ADMINISTRADOR(1, "Administrador", "ROLE_ADMINISTRADOR"),
-	PROPRIETARIO(2, "Academia", "ROLE_ACADEMIA"),
-	SEGUIDOR(3, "Aluno(a)", "ROLE_ALUNO"),
-	TESTE(4, "Teste", "ROLE_TESTE");
+	PROPRIETARIO(2, "Proprietario", "ROLE_PROPRIETARIO"),
+	SEGUIDOR(3, "Seguidor", "ROLE_SEGUIDOR");
 	
 	private int codigo;
 	private String descricao;

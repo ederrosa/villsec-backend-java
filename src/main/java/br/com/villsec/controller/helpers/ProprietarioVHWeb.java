@@ -23,23 +23,17 @@ public class ProprietarioVHWeb {
 	public Proprietario create(ProprietarioDTO objDTO) {
 
 		Set<Perfil> thePerfis = new LinkedHashSet<>();
-
 		thePerfis.add(Perfil.PROPRIETARIO);
-
-		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null,
-				new BCryptPasswordEncoder().encode(objDTO.getSenha()), thePerfis, null, null, Perfil.PROPRIETARIO);
-
+		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null, null, thePerfis,
+				new BCryptPasswordEncoder().encode(objDTO.getSenha()), Perfil.PROPRIETARIO, null);
 		Email theEmail = new Email(null, objDTO.getEmail());
-
 		Endereco theEndereco = new Endereco(null, objDTO.getLogradouro(), objDTO.getCep(), objDTO.getBairro(),
 				objDTO.getCidade(), objDTO.getEstado(), objDTO.getPais());
-
-		Proprietario theProprietario = new Proprietario(null, objDTO.getNome(), objDTO.getGenero(), true,
-				theAutenticacaoSS, theEmail, theEndereco,
-				(objDTO.getDataNascimento() == null || objDTO.getDataNascimento().isEmpty()) ? null
-						: DateUtilities.dateFormat(objDTO.getDataNascimento()),
-				objDTO.getSobreMim(), URI.create(objDTO.getFacebook()), URI.create(objDTO.getInstagram()),
-				URI.create(objDTO.getSpotyfy()), URI.create(objDTO.getTwitter()), URI.create(objDTO.getTwitch()));
+		Proprietario theProprietario = new Proprietario(null, DateUtilities.dateFormat(objDTO.getDataNascimento()),
+				objDTO.getGenero(), objDTO.getNome(), true, theAutenticacaoSS, theEndereco, theEmail, null,
+				URI.create(objDTO.getFacebook()), URI.create(objDTO.getInstagram()), objDTO.getSobreMim(),
+				URI.create(objDTO.getSpotify()), URI.create(objDTO.getTwitch()), URI.create(objDTO.getTwitter()),
+				URI.create(objDTO.getYoutube()));
 
 		theProprietario.setTheTelefones(new LinkedHashSet<Telefone>());
 		if (objDTO.getTipoTelefone1() != null) {
@@ -125,9 +119,14 @@ public class ProprietarioVHWeb {
 				(objDTO.getStatusPessoa() == null) ? theProprietario.getStatusPessoa() : objDTO.getStatusPessoa());
 		theProprietario.setDataNascimento((objDTO.getDataNascimento() == null) ? theProprietario.getDataNascimento()
 				: DateUtilities.dateFormat(objDTO.getDataNascimento()));
-		theProprietario.setSobreMin(
+		theProprietario.setSobreMim(
 				(objDTO.getSobreMim() == null || objDTO.getSobreMim().isEmpty()) ? theProprietario.getSobreMim()
 						: objDTO.getSobreMim());
-
+		theProprietario.setFacebook(URI.create(objDTO.getFacebook()));
+		theProprietario.setInstagram(URI.create(objDTO.getInstagram()));
+		theProprietario.setSpotify(URI.create(objDTO.getSpotify()));
+		theProprietario.setTwitter(URI.create(objDTO.getTwitter()));
+		theProprietario.setTwitch(URI.create(objDTO.getTwitch()));
+		theProprietario.setYoutube(URI.create(objDTO.getYoutube()));
 	}
 }

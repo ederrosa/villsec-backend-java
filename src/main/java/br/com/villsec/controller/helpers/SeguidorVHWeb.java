@@ -22,22 +22,15 @@ public class SeguidorVHWeb {
 	public Seguidor create(SeguidorDTO objDTO) {
 
 		Set<Perfil> thePerfis = new LinkedHashSet<>();
-
 		thePerfis.add(Perfil.SEGUIDOR);
-
-		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null,
-				new BCryptPasswordEncoder().encode(objDTO.getSenha()), thePerfis, null, null, Perfil.SEGUIDOR);
-
+		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null, null, thePerfis,
+				new BCryptPasswordEncoder().encode(objDTO.getSenha()), Perfil.SEGUIDOR, null);
 		Email theEmail = new Email(null, objDTO.getEmail());
-
 		Endereco theEndereco = new Endereco(null, objDTO.getLogradouro(), 
 				 objDTO.getCep(), objDTO.getBairro(), objDTO.getCidade(), objDTO.getEstado(),
 				objDTO.getPais());
-
-		Seguidor theSeguidor = new Seguidor(null, objDTO.getNome(), objDTO.getGenero(), true, theAutenticacaoSS, theEmail,
-				theEndereco, (objDTO.getDataNascimento() == null || objDTO.getDataNascimento().isEmpty()) ? null
-						: DateUtilities.dateFormat(objDTO.getDataNascimento()));
-
+		Seguidor theSeguidor = new Seguidor(null, DateUtilities.dateFormat(objDTO.getDataNascimento()),
+				objDTO.getGenero(), objDTO.getNome(), true, theAutenticacaoSS, theEndereco, theEmail, null);
 		theSeguidor.setTheTelefones(new LinkedHashSet<Telefone>());
 		if (objDTO.getTipoTelefone1() != null) {
 			theSeguidor.getTheTelefones().add(new Telefone(null, objDTO.getNumeroTelefone1(),
@@ -47,7 +40,6 @@ public class SeguidorVHWeb {
 			theSeguidor.getTheTelefones().add(new Telefone(null, objDTO.getNumeroTelefone2(),
 					(objDTO.getTipoTelefone2() == null) ? null : TipoTelefone.toEnum(Integer.parseInt(objDTO.getTipoTelefone2()))));
 		}
-
 		return theSeguidor;
 	}
 

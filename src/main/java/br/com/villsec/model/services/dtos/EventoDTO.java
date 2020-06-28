@@ -12,11 +12,13 @@ public class EventoDTO extends EntidadeDominio {
 	private static final long serialVersionUID = 1L;
 
 	private String classificacao;
-	private String duracao;
-	private String data;
+	private String diaInicio;
+	private String diaTermino;
 	private String descricao;
 	private String folderName;
 	private String folderUrl;
+	private String horaInicio;
+	private String horaTermino;
 	private String nome;
 	private String tipoEvento;
 	@NotEmpty(message = "Preenchimento obrigatório")
@@ -49,11 +51,13 @@ public class EventoDTO extends EntidadeDominio {
 				theEvento.getDtCriacao(),
 				theEvento.getDtUltimaAlteracao());
 		this.classificacao = theEvento.getClassificacao();
-		this.duracao = theEvento.getDuracao();
-		this.data = theEvento.getData().toString();
+		this.diaInicio = theEvento.getDiaInicio().toString();
+		this.diaTermino = theEvento.getDiaTermino().toString();
 		this.descricao = theEvento.getDescricao();
 		this.folderName = theEvento.getFolder().getNome();
 		this.folderUrl = theEvento.getFolder().getUrl().toString();
+		this.horaInicio = theEvento.getHoraInicio();
+		this.horaTermino = theEvento.getHoraTermino();
 		this.nome = theEvento.getNome();
 		this.tipoEvento = theEvento.getTipoEvento().getDescricao();
 		this.logradouro = theEvento.getTheEndereco().getLogradouro();
@@ -72,20 +76,20 @@ public class EventoDTO extends EntidadeDominio {
 		this.classificacao = classificacao;
 	}
 
-	public String getDuracao() {
-		return duracao;
+	public String getDiaInicio() {
+		return diaInicio;
 	}
 
-	public void setDuracao(String duracao) {
-		this.duracao = duracao;
+	public void setDiaInicio(String diaInicio) {
+		this.diaInicio = diaInicio;
 	}
 
-	public String getData() {
-		return data;
+	public String getDiaTermino() {
+		return diaTermino;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setDiaTermino(String diaTermino) {
+		this.diaTermino = diaTermino;
 	}
 
 	public String getDescricao() {
@@ -110,6 +114,22 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setFolderUrl(String folderUrl) {
 		this.folderUrl = folderUrl;
+	}
+	
+	public String getHoraInicio() {
+		return horaInicio;
+	}
+
+	public void setHoraInicio(String horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public String getHoraTermino() {
+		return horaTermino;
+	}
+
+	public void setHoraTermino(String horaTermino) {
+		this.horaTermino = horaTermino;
 	}
 
 	public String getNome() {

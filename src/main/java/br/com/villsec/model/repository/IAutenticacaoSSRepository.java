@@ -9,9 +9,9 @@ import br.com.villsec.model.entities.domain.AutenticacaoSS;
 @Repository
 public interface IAutenticacaoSSRepository extends JpaRepository<AutenticacaoSS, Long> {
 
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	AutenticacaoSS findByLogin(String login);
-	
-	@Transactional(readOnly=true)
+
+	@Transactional(readOnly = true)
 	AutenticacaoSS findByMatricula(String matricula);
 }

@@ -2,6 +2,7 @@ package br.com.villsec.model.services.utilities;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
 import org.imgscalr.Scalr;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +20,9 @@ import br.com.villsec.model.services.exceptions.FileException;
 
 @Component
 public class ImageUtilities {
+	
+	@Value("${image.size}")
+	private Long imgSize;
 
 	public BufferedImage getJpgImageFromFile(MultipartFile uploadedFile) {
 		
@@ -52,6 +57,23 @@ public class ImageUtilities {
 			return new ByteArrayInputStream(os.toByteArray());
 		} catch (IOException e) {
 			throw new FileException("Erro ao ler arquivo");
+		}
+	}
+	
+	public InputStream getInputStream(MultipartFile uploadedFile) {
+
+		String theExtension = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+		if (!"jpg".equals(theExtension) && !"png".equals(theExtension)) {
+			throw new FileException("Somente vídeos no formato: JPG, e PNG são permitidos");
+		}
+		if (uploadedFile.getSize() > this.imgSize) {
+			throw new FileException("A Imagem ultrapassa o limite do sistema de: " + this.imgSize + " bytes ("
+					+ (this.imgSize / (1024 * 1024)) + "MB)!");
+		}
+		try {
+			return new BufferedInputStream(uploadedFile.getInputStream());
+		} catch (IOException e) {
+			throw new FileException("Erro ao ler o vídeo");
 		}
 	}
 

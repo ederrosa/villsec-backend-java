@@ -1,6 +1,7 @@
 package br.com.villsec.model.entities.domain;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 
@@ -15,10 +16,9 @@ public class Seguidor extends Pessoa {
 	public Seguidor() {
 	}
 
-	public Seguidor(Long id, String nome, String genero, Boolean statusPessoa, AutenticacaoSS theAutenticacaoSS,
-			Email theEmail, Endereco theEndereco, Date dataNascimento) {
-		super(id, nome, genero, statusPessoa, theAutenticacaoSS, theEmail, theEndereco, dataNascimento);
+	public Seguidor(Long id, Date dataNascimento, String genero, String nome, Boolean statusPessoa,
+			AutenticacaoSS theAutenticacaoSS, Endereco theEndereco, Email theEmail, Set<Telefone> theTelefones) {
+		super(id, dataNascimento, genero, nome, statusPessoa, theAutenticacaoSS, theEndereco, theEmail, theTelefones);
 		// TODO Auto-generated constructor stub
 	}
-
 }

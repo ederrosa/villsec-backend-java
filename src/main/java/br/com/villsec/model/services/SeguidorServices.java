@@ -43,14 +43,13 @@ public class SeguidorServices {
 	@Value("${prefix.perfil.profile}")
 	private String prefix;
 
-	@Value("${img.profile.size}")
+	@Value("${image.profile.size}")
 	private Integer size;
-	
+
 	@Transactional
 	public Seguidor insert(Seguidor theSeguidor, MultipartFile theMultipartFile) {
 
-		theSeguidor.getTheAutenticacaoSS()
-				.setMatricula(new CodeUtilities().geradorDeMatricula(theUserLoggedInService));
+		theSeguidor.getTheAutenticacaoSS().setMatricula(new CodeUtilities().geradorDeMatricula(theUserLoggedInService));
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
@@ -85,7 +84,8 @@ public class SeguidorServices {
 			case ADMINISTRADOR:
 				return theISeguidorRepository.findAll(pageRequest);
 			case SEGUIDOR:
-				return theISeguidorRepository.findAllByTheAutenticacaoSS(UserLoggedInService.authenticated(), pageRequest);
+				return theISeguidorRepository.findAllByTheAutenticacaoSS(UserLoggedInService.authenticated(),
+						pageRequest);
 			default:
 				throw new AuthorizationException("Acesso negado! - Você não possui permissão para executar esta ação!");
 			}
@@ -96,13 +96,16 @@ public class SeguidorServices {
 
 	public Seguidor update(Seguidor theSeguidor, MultipartFile theMultipartFile) {
 
-		if (UserLoggedInService.authenticated() != null) {
+		if (UserLoggedInService.authenticated() != null
+				&& theUserLoggedInService.userLoggedIn().getId() == theSeguidor.getId()
+				|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 			if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 				BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 				jpgImage = theImageUtilities.cropSquare(jpgImage);
 				jpgImage = theImageUtilities.resize(jpgImage, size);
-				theSeguidor.getTheAutenticacaoSS().setNomeImgPerfil(prefix + theSeguidor.getTheAutenticacaoSS().getMatricula()
-						+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+				theSeguidor.getTheAutenticacaoSS()
+						.setNomeImgPerfil(prefix + theSeguidor.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
+								+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
 				theSeguidor.getTheAutenticacaoSS()
 						.setUriImgPerfil(
 								theS3Service
@@ -118,16 +121,17 @@ public class SeguidorServices {
 		}
 	}
 
-	public void delete(Long id) {		
-		try {			
+	public void delete(Long id) {
+		try {
 			if (UserLoggedInService.authenticated() != null && theUserLoggedInService.userLoggedIn().getId() == id
-					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {				
+					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
 					theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
 				}
 				theISeguidorRepository.deleteById(id);
 			} else {
-				throw new AuthorizationException("Acesso negado! - Você não possui permissão para excluir esta Seguidor!");
+				throw new AuthorizationException(
+						"Acesso negado! - Você não possui permissão para excluir esta Seguidor!");
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Seguidors relacionadas");

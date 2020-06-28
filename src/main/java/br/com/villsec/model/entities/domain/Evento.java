@@ -18,12 +18,14 @@ public class Evento extends EntidadeDominio {
 	private static final long serialVersionUID = 1L;
 
 	private String classificacao;
-	private String duracao;
-	private Date data;
 	private String descricao;
+	private Date diaInicio;
+	private Date diaTermino;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "File_ID")
-	private File folder;
+	private Arquivo folder;
+	private String horaInicio;
+	private String horaTermino;
 	private String nome;
 	private Integer tipoEvento;
 	@OneToOne(cascade = CascadeType.ALL)
@@ -34,14 +36,16 @@ public class Evento extends EntidadeDominio {
 
 	}
 
-	public Evento(Long id, String classificacao, String duracao, Date data, String descricao, File folder, String nome,
-			TipoEvento tipoEvento, Endereco theEndereco) {
+	public Evento(Long id, String classificacao, Date diaInicio, Date diaTermino, String descricao, Arquivo folder,
+			String horaInicio, String horaTermino, String nome, TipoEvento tipoEvento, Endereco theEndereco) {
 		super(id);
 		this.classificacao = classificacao;
-		this.duracao = duracao;
-		this.data = data;
+		this.diaInicio = diaInicio;
+		this.diaTermino = diaTermino;
 		this.descricao = descricao;
 		this.folder = folder;
+		this.horaInicio = horaInicio;
+		this.horaTermino = horaTermino;
 		this.nome = nome;
 		this.tipoEvento = (tipoEvento == null) ? null : tipoEvento.getCodigo();
 		this.theEndereco = theEndereco;
@@ -55,22 +59,6 @@ public class Evento extends EntidadeDominio {
 		this.classificacao = classificacao;
 	}
 
-	public String getDuracao() {
-		return duracao;
-	}
-
-	public void setDuracao(String duracao) {
-		this.duracao = duracao;
-	}
-
-	public Date getData() {
-		return data;
-	}
-
-	public void setData(Date data) {
-		this.data = data;
-	}
-
 	public String getDescricao() {
 		return descricao;
 	}
@@ -79,12 +67,44 @@ public class Evento extends EntidadeDominio {
 		this.descricao = descricao;
 	}
 
-	public File getFolder() {
+	public Date getDiaInicio() {
+		return diaInicio;
+	}
+
+	public void setDiaInicio(Date diaInicio) {
+		this.diaInicio = diaInicio;
+	}
+
+	public Date getDiaTermino() {
+		return diaTermino;
+	}
+
+	public void setDiaTermino(Date diaTermino) {
+		this.diaTermino = diaTermino;
+	}
+
+	public Arquivo getFolder() {
 		return folder;
 	}
 
-	public void setFolder(File folder) {
+	public void setFolder(Arquivo folder) {
 		this.folder = folder;
+	}
+
+	public String getHoraInicio() {
+		return horaInicio;
+	}
+
+	public void setHoraInicio(String horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public String getHoraTermino() {
+		return horaTermino;
+	}
+
+	public void setHoraTermino(String horaTermino) {
+		this.horaTermino = horaTermino;
 	}
 
 	public String getNome() {
@@ -95,20 +115,20 @@ public class Evento extends EntidadeDominio {
 		this.nome = nome;
 	}
 
-	public TipoEvento getTipoEvento() {
-		return TipoEvento.toEnum(tipoEvento);
-	}
-
-	public void setTipoEvento(TipoEvento tipoEvento) {
-		this.tipoEvento = tipoEvento.getCodigo();
-	}
-
 	public Endereco getTheEndereco() {
 		return theEndereco;
 	}
 
 	public void setTheEndereco(Endereco theEndereco) {
 		this.theEndereco = theEndereco;
+	}
+
+	public TipoEvento getTipoEvento() {
+		return TipoEvento.toEnum(tipoEvento);
+	}
+
+	public void setTipoEvento(TipoEvento tipoEvento) {
+		this.tipoEvento = tipoEvento.getCodigo();
 	}
 
 }

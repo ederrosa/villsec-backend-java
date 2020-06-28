@@ -8,15 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.villsec.model.entities.domain.Album;
-import br.com.villsec.model.entities.domain.Musica;
+import br.com.villsec.model.entities.domain.Galeria;
+import br.com.villsec.model.entities.domain.Video;
 
 @Repository
-public interface IMusicaRepository extends JpaRepository<Musica, Long> {
+public interface IVideoRepository extends JpaRepository<Video, Long> {
 
 	@Transactional(readOnly = true)
-	List<Musica> findAllByTheAlbum(Album theAlbum);
+	List<Video> findAllByTheGaleria(Galeria theGaleria);
 	
 	@Transactional(readOnly = true)
-	Page<Musica> findAllByTheAlbum(Album theAlbum, Pageable pageRequest);
+	Page<Video> findAllByTheGaleria(Galeria theGaleria, Pageable pageRequest);
 }

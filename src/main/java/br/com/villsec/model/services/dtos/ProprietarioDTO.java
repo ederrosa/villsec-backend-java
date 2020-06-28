@@ -65,9 +65,10 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	private String sobreMim;
 	private String facebook;
 	private String instagram;
-	private String spotyfy;
+	private String spotify;
 	private String twitter;
 	private String twitch;
+	private String youtube;
 
 	public ProprietarioDTO() {
 
@@ -106,9 +107,10 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		this.sobreMim = theProprietario.getSobreMim();
 		this.facebook = theProprietario.getFacebook().toString();
 		this.instagram = theProprietario.getInstagram().toString();
-		this.spotyfy = theProprietario.getSpotyfy().toString();
+		this.spotify = theProprietario.getSpotify().toString();
 		this.twitter = theProprietario.getTwitter().toString();
 		this.twitch = theProprietario.getTwitch().toString();
+		this.youtube = theProprietario.getYoutube().toString();
 	}
 
 	public String getSenha() {
@@ -295,12 +297,12 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		this.instagram = instagram;
 	}
 
-	public String getSpotyfy() {
-		return spotyfy;
+	public String getSpotify() {
+		return spotify;
 	}
 
-	public void setSpotyfy(String spotyfy) {
-		this.spotyfy = spotyfy;
+	public void setSpotify(String spotify) {
+		this.spotify = spotify;
 	}
 
 	public String getTwitter() {
@@ -317,5 +319,15 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 
 	public void setTwitch(String twitch) {
 		this.twitch = twitch;
-	}	
+	}
+
+	public String getYoutube() {
+		return youtube;
+	}
+
+	public void setYoutube(String youtube) {
+		this.youtube = youtube;
+	}
+	
+	
 }

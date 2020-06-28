@@ -19,22 +19,24 @@ public class Album extends EntidadeDominio {
 	private String ano;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "File_ID")
-	private File capa;
+	private Arquivo capa;
 	private String codigo;
+	private String descricao;
 	private String genero;
 	private String nome;
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "ALBUM_ID")
+	@JoinColumn(name = "MUSICA_ID")
 	private Set<Musica> theMusicas = new LinkedHashSet<Musica>();
 
 	public Album() {
 	}
 
-	public Album(Long id, String ano, File capa, String codigo, String genero, String nome, Set<Musica> theMusicas) {
+	public Album(Long id, String ano, Arquivo capa, String codigo, String descricao, String genero, String nome, Set<Musica> theMusicas) {
 		super(id);
 		this.ano = ano;
 		this.capa = capa;
 		this.codigo = codigo;
+		this.descricao = descricao;
 		this.genero = genero;
 		this.nome = nome;
 		this.theMusicas = theMusicas;
@@ -48,11 +50,11 @@ public class Album extends EntidadeDominio {
 		this.ano = ano;
 	}
 
-	public File getCapa() {
+	public Arquivo getCapa() {
 		return capa;
 	}
 
-	public void setCapa(File capa) {
+	public void setCapa(Arquivo capa) {
 		this.capa = capa;
 	}
 
@@ -62,6 +64,14 @@ public class Album extends EntidadeDominio {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public String getGenero() {

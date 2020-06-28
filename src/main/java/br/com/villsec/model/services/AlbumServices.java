@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.villsec.model.entities.domain.Album;
-import br.com.villsec.model.entities.domain.File;
+import br.com.villsec.model.entities.domain.Arquivo;
+import br.com.villsec.model.entities.domain.Musica;
 import br.com.villsec.model.entities.enums.Perfil;
 import br.com.villsec.model.repository.IAlbumRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
@@ -29,6 +30,9 @@ public class AlbumServices {
 
 	@Autowired
 	private IAlbumRepository theAlbumRepository;
+	
+	@Autowired
+	private MusicaServices theMusicaServices;
 
 	@Autowired
 	private S3Service theS3Service;
@@ -39,7 +43,7 @@ public class AlbumServices {
 	@Value("${prefix.album.profile}")
 	private String prefix;
 
-	@Value("${img.profile.size}")
+	@Value("${image.size}")
 	private Integer size;
 
 	@Transactional
@@ -49,15 +53,13 @@ public class AlbumServices {
 				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-
 		theEntidade.setId(null);
 		theEntidade.setCodigo(new CodeUtilities().codigoAlbum(theAlbumRepository));
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
-		String fileName = prefix + theEntidade.getGenero() + "/" + theEntidade.getCodigo() + "/" + theEntidade.getNome()
-				+ "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-		File theFile = new File(null, fileName,
+		String fileName = prefix + "/" + theEntidade.getNome() + "."
+				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		Arquivo theFile = new Arquivo(null, fileName,
 				theS3Service.uploadFile(
 						theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
@@ -89,9 +91,9 @@ public class AlbumServices {
 			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 			jpgImage = theImageUtilities.cropSquare(jpgImage);
 			jpgImage = theImageUtilities.resize(jpgImage, size);
-			String fileName = prefix + theEntidade.getGenero() + "/" + theEntidade.getCodigo() + "/"
-					+ theEntidade.getNome() + "." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			File theFile = new File(null, fileName,
+			String fileName = prefix + "/" + theEntidade.getNome() + "."
+					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+			Arquivo theFile = new Arquivo(null, fileName,
 					theS3Service.uploadFile(
 							theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
@@ -110,6 +112,9 @@ public class AlbumServices {
 		try {
 			if (find(id).getCapa() != null) {
 				theS3Service.deleteFile(find(id).getCapa().getNome());
+			}
+			for(Musica theMusica : this.theMusicaServices.findAll(this.find(id))) {
+				this.theMusicaServices.delete(theMusica.getId());			
 			}
 			theAlbumRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {

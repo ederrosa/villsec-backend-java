@@ -2,6 +2,7 @@ package br.com.villsec.model.entities.domain;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 
@@ -12,36 +13,30 @@ import org.hibernate.annotations.DynamicInsert;
 public class Proprietario extends Pessoa {
 
 	private static final long serialVersionUID = 1L;
-
-	private String sobreMim;
+	
 	private URI facebook;
 	private URI instagram;
-	private URI spotyfy;
-	private URI twitter;
+	private String sobreMim;
+	private URI spotify;
 	private URI twitch;
+	private URI twitter;	
+	private URI youtube;
 
 	public Proprietario() {
 
-	}
+	}	
 
-	public Proprietario(Long id, String nome, String genero, Boolean statusPessoa, AutenticacaoSS theAutenticacaoSS,
-			Email theEmail, Endereco theEndereco, Date dataNascimento, String sobreMim, URI facebook,
-			URI instagram, URI spotyfy, URI twitter, URI twitch) {
-		super(id, nome, genero, statusPessoa, theAutenticacaoSS, theEmail, theEndereco, dataNascimento);
-		this.sobreMim = sobreMim;
+	public Proprietario(Long id, Date dataNascimento, String genero, String nome, Boolean statusPessoa,
+			AutenticacaoSS theAutenticacaoSS, Endereco theEndereco, Email theEmail, Set<Telefone> theTelefones,
+			URI facebook, URI instagram, String sobreMim, URI spotify, URI twitch, URI twitter, URI youtube) {
+		super(id, dataNascimento, genero, nome, statusPessoa, theAutenticacaoSS, theEndereco, theEmail, theTelefones);
 		this.facebook = facebook;
 		this.instagram = instagram;
-		this.spotyfy = spotyfy;
-		this.twitter = twitter;
-		this.twitch = twitch;
-	}
-
-	public String getSobreMim() {
-		return sobreMim;
-	}
-
-	public void setSobreMin(String sobreMim) {
 		this.sobreMim = sobreMim;
+		this.spotify = spotify;
+		this.twitch = twitch;
+		this.twitter = twitter;
+		this.youtube = youtube;
 	}
 
 	public URI getFacebook() {
@@ -60,20 +55,20 @@ public class Proprietario extends Pessoa {
 		this.instagram = instagram;
 	}
 
-	public URI getSpotyfy() {
-		return spotyfy;
+	public String getSobreMim() {
+		return sobreMim;
 	}
 
-	public void setSpotyfy(URI spotyfy) {
-		this.spotyfy = spotyfy;
+	public void setSobreMim(String sobreMim) {
+		this.sobreMim = sobreMim;
 	}
 
-	public URI getTwitter() {
-		return twitter;
+	public URI getSpotify() {
+		return spotify;
 	}
 
-	public void setTwitter(URI twitter) {
-		this.twitter = twitter;
+	public void setSpotify(URI spotify) {
+		this.spotify = spotify;
 	}
 
 	public URI getTwitch() {
@@ -84,8 +79,19 @@ public class Proprietario extends Pessoa {
 		this.twitch = twitch;
 	}
 
-	public void setSobreMim(String sobreMim) {
-		this.sobreMim = sobreMim;
+	public URI getTwitter() {
+		return twitter;
 	}
-	
+
+	public void setTwitter(URI twitter) {
+		this.twitter = twitter;
+	}
+
+	public URI getYoutube() {
+		return youtube;
+	}
+
+	public void setYoutube(URI youtube) {
+		this.youtube = youtube;
+	}	
 }

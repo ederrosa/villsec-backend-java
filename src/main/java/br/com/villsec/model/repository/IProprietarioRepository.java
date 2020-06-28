@@ -10,14 +10,14 @@ import br.com.villsec.model.entities.domain.AutenticacaoSS;
 import br.com.villsec.model.entities.domain.Proprietario;
 
 @Repository
-public interface IProprietarioRepository extends JpaRepository<Proprietario, Long>{
+public interface IProprietarioRepository extends JpaRepository<Proprietario, Long> {
 
 	@Transactional(readOnly = true)
 	Proprietario findByTheEmailEmail(String theEmail);
 
 	@Transactional(readOnly = true)
 	Proprietario findByTheAutenticacaoSS(AutenticacaoSS theAutenticacaoSS);
-	
+
 	@Transactional(readOnly = true)
 	Page<Proprietario> findAllByTheAutenticacaoSS(AutenticacaoSS theAutenticacaoSS, Pageable pageRequest);
 }

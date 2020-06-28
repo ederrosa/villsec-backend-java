@@ -2,12 +2,12 @@ package br.com.villsec.model.entities.enums;
 
 public enum TipoEvento {
 
-	TIPO_1(1, ""),
-	TIPO_2(2, ""),
-	TIPO_3(3, ""),
-	TIPO_4(4, ""),
-	TIPO_5(5, ""),
-	TIPO_6(6, "");
+	TIPO_1(1, "tipo 1"),
+	TIPO_2(2, "tipo 2"),
+	TIPO_3(3, "tipo 3"),
+	TIPO_4(4, "tipo 4"),
+	TIPO_5(5, "tipo 5"),
+	TIPO_6(6, "tipo 6");
 	
 	private int codigo;
 	private String descricao;

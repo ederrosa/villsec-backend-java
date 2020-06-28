@@ -36,21 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] PUBLIC_MATCHERS = { "/login" };
 
 	private static final String[] PUBLIC_MATCHERS_GET = { "/albuns/**", "/elementos/**", "/eventos/**", "/musicas/**",
-			"/principal/**" };
+			"/proprietarios/**" };
 
-	private static final String[] PUBLIC_MATCHERS_POST = { "/**" };
-
-	private static final String[] PUBLIC_MATCHERS_PUT = { "/**" };
-
-	private static final String[] PUBLIC_MATCHERS_DELETE = { "/**" };
+	private static final String[] PUBLIC_MATCHERS_POST = { "/seguidores" };
 
 	@Override
 	protected void configure(HttpSecurity https) throws Exception {
 
 		https.cors().and().csrf().disable();
 		https.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-				.antMatchers(HttpMethod.DELETE, PUBLIC_MATCHERS_DELETE).permitAll()
-				.antMatchers(HttpMethod.PUT, PUBLIC_MATCHERS_PUT).permitAll()
 				.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll().antMatchers(PUBLIC_MATCHERS).permitAll()
 				.anyRequest().authenticated();
 		https.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));

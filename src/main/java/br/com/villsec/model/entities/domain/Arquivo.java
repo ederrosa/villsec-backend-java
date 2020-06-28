@@ -5,18 +5,18 @@ import java.net.URI;
 import javax.persistence.Entity;
 
 @Entity
-public class File extends EntidadeDominio {
+public class Arquivo extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
 
 	private String nome;
 	private URI url;
 
-	public File() {
+	public Arquivo() {
 
 	}
 
-	public File(Long id, String nome, URI url) {
+	public Arquivo(Long id, String nome, URI url) {
 		super(id);
 		this.nome = nome;
 		this.url = url;

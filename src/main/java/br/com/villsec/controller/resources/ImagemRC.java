@@ -17,54 +17,54 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.villsec.controller.helpers.MusicaVHWeb;
-import br.com.villsec.model.entities.domain.Musica;
-import br.com.villsec.model.services.MusicaServices;
-import br.com.villsec.model.services.dtos.MusicaDTO;
+import br.com.villsec.controller.helpers.ImagemVHWeb;
+import br.com.villsec.model.entities.domain.Imagem;
+import br.com.villsec.model.services.ImagemServices;
+import br.com.villsec.model.services.dtos.ImagemDTO;
 
 @RestController
-@RequestMapping(value = "/musicas")
-public class MusicaRC {
+@RequestMapping(value = "/imagens")
+public class ImagemRC {
 
 	@Autowired
-	private MusicaServices theMusicaServices;
+	private ImagemServices theElementoServices;
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid MusicaDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile,
-			@RequestParam(value = "albumID") String theAlbum) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theMusicaServices.insert(new MusicaVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theAlbum)).getId())
+	public ResponseEntity<Void> insert(@Valid ImagemDTO objNewDTO,
+			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile,
+			@RequestParam(value = "galeriaID") String theGaleria) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theElementoServices
+				.insert(new ImagemVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theGaleria)).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<MusicaDTO> find(@PathVariable Long id) {
-		MusicaDTO obj = new MusicaDTO(theMusicaServices.find(id));
+	public ResponseEntity<ImagemDTO> find(@PathVariable Long id) {
+		ImagemDTO obj = new ImagemDTO(theElementoServices.find(id));
 		return ResponseEntity.ok().body(obj);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Page<MusicaDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ImagemDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
-			@RequestParam(value = "orderBy", defaultValue = "index") String orderBy,
+			@RequestParam(value = "orderBy", defaultValue = "titulo") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "theAlbum") Long theAlbum) {
-		Page<Musica> list = theMusicaServices.findAllPage(page, linesPerPage, orderBy, direction, theAlbum);
-		Page<MusicaDTO> listDTO = list.map(obj -> new MusicaDTO(obj));
+			@RequestParam(value = "theGaleria") Long theGaleria) {
+		Page<Imagem> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction, theGaleria);
+		Page<ImagemDTO> listDTO = list.map(obj -> new ImagemDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid MusicaDTO objDTO, @PathVariable Long id,
+	public ResponseEntity<Void> update(@Valid ImagemDTO objDTO, @PathVariable Long id,
 			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile) {
 		objDTO.setId(id);
-		Musica theMusica = theMusicaServices.find(id);
-		new MusicaVHWeb().update(theMusica, objDTO);
-		theMusica = theMusicaServices.update(theMusica, theMultipartFile);
+		Imagem theElemento = theElementoServices.find(id);
+		new ImagemVHWeb().update(theElemento, objDTO);
+		theElemento = theElementoServices.update(theElemento, theMultipartFile);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -72,7 +72,7 @@ public class MusicaRC {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		find(id);
-		theMusicaServices.delete(id);
+		theElementoServices.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }

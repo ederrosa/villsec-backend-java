@@ -9,14 +9,16 @@ public class MusicaVHWeb {
 
 		Musica theMusica = new Musica(
 				null,
-				objDTO.getNome(),
-				Integer.parseInt(objDTO.getBpm()),
 				objDTO.getAutor(),
+				Integer.parseInt(objDTO.getBpm()),
 				objDTO.getCoautor(),
-				Integer.parseInt(objDTO.getDuracao()),
-				null,
 				objDTO.getCopyright(),
-				objDTO.getIdioma());
+				objDTO.getDuracao(),
+				Integer.parseInt(objDTO.getFaixa()),
+				objDTO.getIdioma(),
+				objDTO.getNome(),			
+				null,				
+				null);
 		return theMusica;
 	}
 	
@@ -26,8 +28,9 @@ public class MusicaVHWeb {
 			theMusica.setBpm(Integer.parseInt(objDTO.getBpm()));
 			theMusica.setCoautor(objDTO.getCoautor());
 			theMusica.setCopyright(objDTO.getCopyright());
-			theMusica.setDuracao(Integer.parseInt(objDTO.getDuracao()));
+			theMusica.setDuracao(objDTO.getDuracao());
 			theMusica.setIdioma(objDTO.getIdioma());
+			theMusica.setFaixa(Integer.parseInt(objDTO.getFaixa()));
 			theMusica.setNome(objDTO.getNome());
 	}
 }

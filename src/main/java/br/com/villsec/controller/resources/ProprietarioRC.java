@@ -23,12 +23,13 @@ import br.com.villsec.model.services.ProprietarioServices;
 import br.com.villsec.model.services.dtos.ProprietarioDTO;
 
 @RestController
-@RequestMapping(value = "/principal")
+@RequestMapping(value = "/proprietarios")
 public class ProprietarioRC {
 
 	@Autowired
 	private ProprietarioServices theProprietarioServices;
 
+	@PreAuthorize("hasAnyRole('ADMINISTRADOR')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid ProprietarioDTO objNewDTO,
 			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {

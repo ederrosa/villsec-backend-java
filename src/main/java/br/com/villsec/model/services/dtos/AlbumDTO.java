@@ -11,6 +11,7 @@ public class AlbumDTO extends EntidadeDominio{
 	private String capaNome;
 	private String capaUrl;
 	private String codigo;
+	private String descricao;
 	private String genero;
 	private String nome;
 
@@ -28,6 +29,7 @@ public class AlbumDTO extends EntidadeDominio{
 		this.capaNome = theAlbum.getCapa().getNome();
 		this.capaUrl = theAlbum.getCapa().getUrl().toString();
 		this.codigo = theAlbum.getCodigo();
+		this.descricao = theAlbum.getDescricao();
 		this.genero = theAlbum.getGenero();
 		this.nome = theAlbum.getNome();
 	}
@@ -62,6 +64,14 @@ public class AlbumDTO extends EntidadeDominio{
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public String getGenero() {
