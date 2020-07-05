@@ -1,6 +1,9 @@
 package br.com.villsec.controller.helpers;
 
 import br.com.villsec.model.entities.domain.Evento;
+
+import java.net.URI;
+
 import br.com.villsec.model.entities.domain.Endereco;
 import br.com.villsec.model.entities.enums.TipoEvento;
 import br.com.villsec.model.services.dtos.EventoDTO;
@@ -15,10 +18,13 @@ public class EventoVHWeb {
 						: DateUtilities.dateFormat(objDTO.getDiaInicio()),
 				(objDTO.getDiaTermino() == null || objDTO.getDiaTermino().isEmpty()) ? null
 						: DateUtilities.dateFormat(objDTO.getDiaTermino()),
-				objDTO.getDescricao(), null, objDTO.getHoraInicio(), objDTO.getHoraTermino(), objDTO.getNome(),
+				objDTO.getDescricao(), null, objDTO.getHoraInicio(), objDTO.getHoraTermino(),
+				(objDTO.getIngressoUrl() == null || objDTO.getIngressoUrl().isEmpty()) ? null
+						: URI.create(objDTO.getIngressoUrl()),
+				objDTO.getNome(),
 				(objDTO.getTipoEvento() == null) ? null : TipoEvento.toEnum(Integer.parseInt(objDTO.getTipoEvento())),
-				new Endereco(null, objDTO.getLogradouro(), objDTO.getCep(), objDTO.getBairro(), objDTO.getCidade(),
-						objDTO.getEstado(), objDTO.getPais()));
+				new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(), objDTO.getEstado(),
+						objDTO.getLogradouro(), objDTO.getPais()));
 		return theEvento;
 	}
 
@@ -32,9 +38,11 @@ public class EventoVHWeb {
 		theEvento.setDescricao(objDTO.getDescricao());
 		theEvento.setHoraInicio(objDTO.getHoraInicio());
 		theEvento.setHoraTermino(objDTO.getHoraTermino());
+		theEvento.setIngressoUrl((objDTO.getIngressoUrl() == null || objDTO.getIngressoUrl().isEmpty()) ? null
+				: URI.create(objDTO.getIngressoUrl()));
 		theEvento.setNome(objDTO.getNome());
-		theEvento.setTheEndereco(new Endereco(theEvento.getTheEndereco().getId(), objDTO.getLogradouro(),
-				objDTO.getCep(), objDTO.getBairro(), objDTO.getCidade(), objDTO.getEstado(), objDTO.getPais()));
+		theEvento.setTheEndereco(new Endereco(theEvento.getTheEndereco().getId(), objDTO.getBairro(), objDTO.getCep(),
+				objDTO.getCidade(), objDTO.getEstado(), objDTO.getLogradouro(), objDTO.getPais()));
 		theEvento.setTipoEvento(
 				(objDTO.getTipoEvento() == null) ? null : TipoEvento.toEnum(Integer.parseInt(objDTO.getTipoEvento())));
 	}

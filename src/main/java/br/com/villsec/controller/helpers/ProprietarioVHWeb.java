@@ -27,8 +27,8 @@ public class ProprietarioVHWeb {
 		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null, null, thePerfis,
 				new BCryptPasswordEncoder().encode(objDTO.getSenha()), Perfil.PROPRIETARIO, null);
 		Email theEmail = new Email(null, objDTO.getEmail());
-		Endereco theEndereco = new Endereco(null, objDTO.getLogradouro(), objDTO.getCep(), objDTO.getBairro(),
-				objDTO.getCidade(), objDTO.getEstado(), objDTO.getPais());
+		Endereco theEndereco = new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(), objDTO.getEstado(),
+				objDTO.getLogradouro(), objDTO.getPais());
 		Proprietario theProprietario = new Proprietario(null, DateUtilities.dateFormat(objDTO.getDataNascimento()),
 				objDTO.getGenero(), objDTO.getNome(), true, theAutenticacaoSS, theEndereco, theEmail, null,
 				URI.create(objDTO.getFacebook()), URI.create(objDTO.getInstagram()), objDTO.getSobreMim(),

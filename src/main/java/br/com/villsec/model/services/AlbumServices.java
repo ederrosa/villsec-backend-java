@@ -57,7 +57,7 @@ public class AlbumServices {
 		theEntidade.setCodigo(new CodeUtilities().codigoAlbum(theAlbumRepository));
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
-		String fileName = prefix + "/" + theEntidade.getNome() + "."
+		String fileName = prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
 				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 		Arquivo theFile = new Arquivo(null, fileName,
 				theS3Service.uploadFile(
@@ -91,7 +91,7 @@ public class AlbumServices {
 			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 			jpgImage = theImageUtilities.cropSquare(jpgImage);
 			jpgImage = theImageUtilities.resize(jpgImage, size);
-			String fileName = prefix + "/" + theEntidade.getNome() + "."
+			String fileName = prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 			Arquivo theFile = new Arquivo(null, fileName,
 					theS3Service.uploadFile(

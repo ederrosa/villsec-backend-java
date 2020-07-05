@@ -12,13 +12,14 @@ public class EventoDTO extends EntidadeDominio {
 	private static final long serialVersionUID = 1L;
 
 	private String classificacao;
-	private String diaInicio;
-	private String diaTermino;
 	private String descricao;
+	private String diaInicio;
+	private String diaTermino;	
 	private String folderName;
 	private String folderUrl;
 	private String horaInicio;
 	private String horaTermino;
+	private String ingressoUrl;
 	private String nome;
 	private String tipoEvento;
 	@NotEmpty(message = "Preenchimento obrigatório")
@@ -58,6 +59,9 @@ public class EventoDTO extends EntidadeDominio {
 		this.folderUrl = theEvento.getFolder().getUrl().toString();
 		this.horaInicio = theEvento.getHoraInicio();
 		this.horaTermino = theEvento.getHoraTermino();
+		if(theEvento.getIngressoUrl() != null) {
+			this.ingressoUrl = theEvento.getIngressoUrl().toString();
+		}		
 		this.nome = theEvento.getNome();
 		this.tipoEvento = theEvento.getTipoEvento().getDescricao();
 		this.logradouro = theEvento.getTheEndereco().getLogradouro();
@@ -75,6 +79,14 @@ public class EventoDTO extends EntidadeDominio {
 	public void setClassificacao(String classificacao) {
 		this.classificacao = classificacao;
 	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 
 	public String getDiaInicio() {
 		return diaInicio;
@@ -90,14 +102,6 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setDiaTermino(String diaTermino) {
 		this.diaTermino = diaTermino;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
 	}
 
 	public String getFolderName() {
@@ -130,6 +134,14 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setHoraTermino(String horaTermino) {
 		this.horaTermino = horaTermino;
+	}	
+	
+	public String getIngressoUrl() {
+		return ingressoUrl;
+	}
+
+	public void setIngressoUrl(String ingressoUrl) {
+		this.ingressoUrl = ingressoUrl;
 	}
 
 	public String getNome() {

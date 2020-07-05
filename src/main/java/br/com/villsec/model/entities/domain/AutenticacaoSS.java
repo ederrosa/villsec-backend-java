@@ -33,7 +33,7 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 	private String nomeImgPerfil;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "PERFIS")
-	private Set<Integer> perfis;
+	private Set<Integer> perfil;
 	private String senha;
 	private Integer tipoUsuario;
 	private URI uriImgPerfil;
@@ -42,17 +42,17 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 
 	}
 
-	public AutenticacaoSS(Long id, String login, String matricula, String nomeImgPerfil, Set<Perfil> perfis,
+	public AutenticacaoSS(Long id, String login, String matricula, String nomeImgPerfil, Set<Perfil> perfil,
 			String senha, Perfil tipoUsuario, URI uriImgPerfil) {
 		super(id);
 		this.login = login;
 		this.matricula = matricula;
 		this.nomeImgPerfil = nomeImgPerfil;
-		this.perfis = perfis.stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
+		this.perfil = perfil.stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
 		this.senha = senha;
 		this.tipoUsuario = (tipoUsuario == null) ? null : tipoUsuario.getCodigo();
 		this.uriImgPerfil = uriImgPerfil;
-		this.authorities = perfis.stream().map(x -> new SimpleGrantedAuthority(x.getRole()))
+		this.authorities = perfil.stream().map(x -> new SimpleGrantedAuthority(x.getRole()))
 				.collect(Collectors.toList());
 	}
 
@@ -80,12 +80,12 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 		this.nomeImgPerfil = nomeImgPerfil;
 	}
 
-	public Set<Perfil> getPerfis() {
-		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+	public Set<Perfil> getPerfil() {
+		return perfil.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
 
 	public void addPerfis(Perfil perfil) {
-		this.perfis.add(perfil.getCodigo());
+		this.perfil.add(perfil.getCodigo());
 	}
 
 	public String getSenha() {
@@ -118,7 +118,7 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return perfis.stream().map(x -> new SimpleGrantedAuthority(Perfil.toEnum(x).getRole()))
+		return perfil.stream().map(x -> new SimpleGrantedAuthority(Perfil.toEnum(x).getRole()))
 				.collect(Collectors.toList());
 	}
 
