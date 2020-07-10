@@ -1,5 +1,7 @@
 package br.com.villsec.model.entities.domain;
 
+import java.net.URI;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -16,6 +18,7 @@ public class Endereco extends EntidadeDominio {
 	private String cidade;
 	@Column(columnDefinition = "VARCHAR(50)")
 	private String estado;
+	private URI googleMapsUrl;
 	@Column(columnDefinition = "VARCHAR(100)")
 	private String logradouro;
 	@Column(columnDefinition = "VARCHAR(50)")
@@ -65,6 +68,14 @@ public class Endereco extends EntidadeDominio {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	public URI getGoogleMapsUrl() {
+		return googleMapsUrl;
+	}
+
+	public void setGoogleMapsUrl(URI googleMapsUrl) {
+		this.googleMapsUrl = googleMapsUrl;
 	}
 
 	public String getLogradouro() {

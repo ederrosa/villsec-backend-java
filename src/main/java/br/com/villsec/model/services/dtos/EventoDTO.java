@@ -17,6 +17,7 @@ public class EventoDTO extends EntidadeDominio {
 	private String diaTermino;	
 	private String folderName;
 	private String folderUrl;
+	private String googleMapsUrl;
 	private String horaInicio;
 	private String horaTermino;
 	private String ingressoUrl;
@@ -70,6 +71,9 @@ public class EventoDTO extends EntidadeDominio {
 		this.cidade = theEvento.getTheEndereco().getCidade();
 		this.estado = theEvento.getTheEndereco().getEstado();
 		this.pais = theEvento.getTheEndereco().getPais();
+		if(theEvento.getTheEndereco().getGoogleMapsUrl() != null) {
+			this.googleMapsUrl = theEvento.getTheEndereco().getGoogleMapsUrl().toString();
+		}
 	}
 
 	public String getClassificacao() {
@@ -118,8 +122,16 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setFolderUrl(String folderUrl) {
 		this.folderUrl = folderUrl;
-	}
+	}	
 	
+	public String getGoogleMapsUrl() {
+		return googleMapsUrl;
+	}
+
+	public void setGoogleMapsUrl(String googleMapsUrl) {
+		this.googleMapsUrl = googleMapsUrl;
+	}
+
 	public String getHoraInicio() {
 		return horaInicio;
 	}

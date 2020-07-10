@@ -7,6 +7,8 @@ public class ImagemDTO extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
 	
+	private String arquivoNome;
+	private String arquivoUrl;
 	private String descricao;
 	private String titulo;
 	
@@ -20,8 +22,26 @@ public class ImagemDTO extends EntidadeDominio {
 				theImagem.getVerificationCode(), 
 				theImagem.getDtCriacao(),
 				theImagem.getDtUltimaAlteracao());
+		this.arquivoNome = theImagem.getTheArquivo().getNome();
+		this.arquivoUrl = theImagem.getTheArquivo().getUrl().toString();
 		this.descricao = theImagem.getDescricao();
 		this.titulo = theImagem.getTitulo(); 
+	}
+	
+	public String getArquivoNome() {
+		return arquivoNome;
+	}
+
+	public void setArquivoNome(String arquivoNome) {
+		this.arquivoNome = arquivoNome;
+	}
+
+	public String getArquivoUrl() {
+		return arquivoUrl;
+	}
+
+	public void setArquivoUrl(String arquivoUrl) {
+		this.arquivoUrl = arquivoUrl;
 	}
 
 	public String getDescricao() {

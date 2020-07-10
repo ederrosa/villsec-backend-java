@@ -22,7 +22,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	private String senha;
 	private String login;
 	private String matricula;
-	private String uriImgPerfil;
+	private String urlImgPerfil;
 	private String tipoUsuario;
 	@NotEmpty(message = "Preenchimento obrigatório")
 	@Length(max = 120, message = "O tamanho deve ser no máximo 120 caracteres")
@@ -46,6 +46,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	@NotEmpty(message = "Preenchimento obrigatório")
 	@Length(min = 1, max = 50, message = "O tamanho deve ser entre 1 e 50 caracteres")
 	private String pais;
+	private String googleMapsUrl;
 	@NotEmpty(message = "Preenchimento obrigatório")
 	@Length(min = 4, max = 20, message = "O tamanho deve ser entre 4 e 20 caracteres")
 	private String numeroTelefone1;
@@ -83,7 +84,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		this.senha = theProprietario.getTheAutenticacaoSS().getSenha();
 		this.login = theProprietario.getTheAutenticacaoSS().getLogin();
 		this.matricula = theProprietario.getTheAutenticacaoSS().getMatricula();
-		this.uriImgPerfil = theProprietario.getTheAutenticacaoSS().getUriImgPerfil().toString();
+		this.urlImgPerfil = theProprietario.getTheAutenticacaoSS().getUriImgPerfil().toString();
 		this.tipoUsuario = theProprietario.getTheAutenticacaoSS().getTipoUsuario().getDescricao();
 		this.email = theProprietario.getTheEmail().getEmail();
 		this.logradouro = theProprietario.getTheEndereco().getLogradouro();
@@ -92,6 +93,9 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		this.cidade = theProprietario.getTheEndereco().getCidade();
 		this.estado = theProprietario.getTheEndereco().getEstado();
 		this.pais = theProprietario.getTheEndereco().getPais();
+		if(theProprietario.getTheEndereco().getGoogleMapsUrl() != null) {
+			this.googleMapsUrl = theProprietario.getTheEndereco().getGoogleMapsUrl().toString();
+		}
 		this.nome = theProprietario.getNome();
 		this.genero = theProprietario.getGenero();
 		this.statusPessoa = theProprietario.getStatusPessoa();
@@ -137,12 +141,12 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		this.matricula = matricula;
 	}
 
-	public String getUriImgPerfil() {
-		return uriImgPerfil;
+	public String getUrlImgPerfil() {
+		return urlImgPerfil;
 	}
 
-	public void setUriImgPerfil(String uriImgPerfil) {
-		this.uriImgPerfil = uriImgPerfil;
+	public void setUriImgPerfil(String urlImgPerfil) {
+		this.urlImgPerfil = urlImgPerfil;
 	}
 
 	public String getTipoUsuario() {
@@ -207,6 +211,14 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 
 	public void setPais(String pais) {
 		this.pais = pais;
+	}
+	
+	public String getGoogleMapsUrl() {
+		return googleMapsUrl;
+	}
+
+	public void setGoogleMapsUrl(String googleMapsUrl) {
+		this.googleMapsUrl = googleMapsUrl;
 	}
 
 	public String getNumeroTelefone1() {

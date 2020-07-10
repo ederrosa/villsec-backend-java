@@ -12,7 +12,6 @@ public class VideoDTO extends EntidadeDominio {
 	private String arquivoUrl;
 	private String descricao;
 	private String embed;
-	private String tipoVideo;
 	private String titulo;
 		
 	public VideoDTO() {
@@ -64,14 +63,6 @@ public class VideoDTO extends EntidadeDominio {
 
 	public void setEmbed(String embed) {
 		this.embed = embed;
-	}
-
-	public String getTipoVideo() {
-		return tipoVideo;
-	}
-
-	public void setTipoVideo(String tipoVideo) {
-		this.tipoVideo = tipoVideo;
 	}
 
 	public String getTitulo() {

@@ -73,7 +73,7 @@ public class ImageUtilities {
 		try {
 			return new BufferedInputStream(uploadedFile.getInputStream());
 		} catch (IOException e) {
-			throw new FileException("Erro ao ler o vídeo");
+			throw new FileException("Erro ao ler o imagem");
 		}
 	}
 

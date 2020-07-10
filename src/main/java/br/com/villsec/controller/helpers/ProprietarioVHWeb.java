@@ -29,6 +29,9 @@ public class ProprietarioVHWeb {
 		Email theEmail = new Email(null, objDTO.getEmail());
 		Endereco theEndereco = new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(), objDTO.getEstado(),
 				objDTO.getLogradouro(), objDTO.getPais());
+		if(objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
+			theEndereco.setGoogleMapsUrl(URI.create(objDTO.getGoogleMapsUrl()));
+		}
 		Proprietario theProprietario = new Proprietario(null, DateUtilities.dateFormat(objDTO.getDataNascimento()),
 				objDTO.getGenero(), objDTO.getNome(), true, theAutenticacaoSS, theEndereco, theEmail, null,
 				URI.create(objDTO.getFacebook()), URI.create(objDTO.getInstagram()), objDTO.getSobreMim(),
@@ -88,6 +91,9 @@ public class ProprietarioVHWeb {
 				.setPais((objDTO.getPais() == null || objDTO.getPais().isEmpty())
 						? theProprietario.getTheEndereco().getPais()
 						: objDTO.getPais());
+		if(objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
+			theProprietario.getTheEndereco().setGoogleMapsUrl(URI.create(objDTO.getGoogleMapsUrl()));
+		}
 		List<Telefone> theTelefones = new ArrayList<>();
 		for (Telefone x : theProprietario.getTheTelefones()) {
 			if (x != null) {
