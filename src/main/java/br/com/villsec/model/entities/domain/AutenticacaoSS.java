@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,8 @@ public class AutenticacaoSS extends EntidadeDominio implements UserDetails {
 	private Set<Integer> perfil;
 	private String senha;
 	private Integer tipoUsuario;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI uriImgPerfil;
 
 	public AutenticacaoSS() {

@@ -11,6 +11,7 @@ public class EventoDTO extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
 
+	private boolean alerta;
 	private String classificacao;
 	private String descricao;
 	private String diaInicio;
@@ -52,6 +53,7 @@ public class EventoDTO extends EntidadeDominio {
 				theEvento.getVerificationCode(), 
 				theEvento.getDtCriacao(),
 				theEvento.getDtUltimaAlteracao());
+		this.alerta = theEvento.isAlerta();
 		this.classificacao = theEvento.getClassificacao();
 		this.diaInicio = theEvento.getDiaInicio().toString();
 		this.diaTermino = theEvento.getDiaTermino().toString();
@@ -74,6 +76,14 @@ public class EventoDTO extends EntidadeDominio {
 		if(theEvento.getTheEndereco().getGoogleMapsUrl() != null) {
 			this.googleMapsUrl = theEvento.getTheEndereco().getGoogleMapsUrl().toString();
 		}
+	}	
+	
+	public boolean isAlerta() {
+		return alerta;
+	}
+
+	public void setAlerta(boolean alerta) {
+		this.alerta = alerta;
 	}
 
 	public String getClassificacao() {

@@ -1,5 +1,7 @@
 package br.com.villsec.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +19,9 @@ public interface ISeguidorRepository extends JpaRepository<Seguidor, Long> {
 
 	@Transactional(readOnly = true)
 	Seguidor findByTheAutenticacaoSS(AutenticacaoSS theAutenticacaoSS);
+	
+	@Transactional(readOnly = true)
+	List<Seguidor> findAllByTheEnderecoCidade(String cidade);
 
 	@Transactional(readOnly = true)
 	Page<Seguidor> findAllByTheAutenticacaoSS(AutenticacaoSS theAutenticacaoSS, Pageable pageRequest);

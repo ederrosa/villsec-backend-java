@@ -18,7 +18,6 @@ import br.com.villsec.model.entities.domain.Video;
 import br.com.villsec.model.entities.domain.Arquivo;
 import br.com.villsec.model.entities.domain.Galeria;
 import br.com.villsec.model.entities.enums.Perfil;
-import br.com.villsec.model.repository.IGaleriaRepository;
 import br.com.villsec.model.repository.IVideoRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
 import br.com.villsec.model.services.exceptions.DataIntegrityException;
@@ -32,7 +31,7 @@ public class VideoServices {
 	private IVideoRepository theIVideoRepository;
 
 	@Autowired
-	private IGaleriaRepository theIGaleriaRepository;
+	private GaleriaServices theGaleriaServices;
 
 	@Autowired
 	private S3Service theS3Service;
@@ -51,7 +50,7 @@ public class VideoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Galeria theGaleria = theIGaleriaRepository.findById(theGaleriaID).get();
+		Galeria theGaleria = theGaleriaServices.find(theGaleriaID);
 		theGaleria.getTheVideos().add(theEntidade);
 		theEntidade.setTheGaleria(theGaleria);
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
@@ -77,7 +76,7 @@ public class VideoServices {
 	public Page<Video> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction,
 			Long theGaleriaID) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theIVideoRepository.findAllByTheGaleria(theIGaleriaRepository.findById(theGaleriaID).get(), pageRequest);
+		return theIVideoRepository.findAllByTheGaleria(theGaleriaServices.find(theGaleriaID), pageRequest);
 	}
 
 	public Video update(Video theEntidade, MultipartFile theMultipartFile) {

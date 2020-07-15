@@ -52,7 +52,7 @@ public class ProprietarioServices {
 		if (UserLoggedInService.authenticated() != null
 				&& UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 			theProprietario.getTheAutenticacaoSS()
-					.setMatricula(new CodeUtilities().geradorDeMatricula(theUserLoggedInService));
+					.setMatricula(new CodeUtilities().registrationGenerator(theUserLoggedInService));
 			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 			jpgImage = theImageUtilities.cropSquare(jpgImage);
 			jpgImage = theImageUtilities.resize(jpgImage, size);

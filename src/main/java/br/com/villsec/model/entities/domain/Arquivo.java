@@ -2,7 +2,9 @@ package br.com.villsec.model.entities.domain;
 
 import java.net.URI;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 @Entity
 public class Arquivo extends EntidadeDominio {
@@ -10,6 +12,8 @@ public class Arquivo extends EntidadeDominio {
 	private static final long serialVersionUID = 1L;
 
 	private String nome;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI url;
 
 	public Arquivo() {

@@ -4,7 +4,9 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 import org.hibernate.annotations.DynamicInsert;
 
@@ -14,12 +16,24 @@ public class Proprietario extends Pessoa {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI facebook;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI instagram;
 	private String sobreMim;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI spotify;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI twitch;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI twitter;	
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI youtube;
 
 	public Proprietario() {

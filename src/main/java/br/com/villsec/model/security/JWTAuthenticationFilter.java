@@ -16,8 +16,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import br.com.villsec.model.entities.domain.AutenticacaoSS;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -37,18 +35,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 
-		try {
-			AutenticacaoSS theAutenticacaoSS = new ObjectMapper().readValue(request.getInputStream(),
-					AutenticacaoSS.class);
-
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-					theAutenticacaoSS.getLogin(), theAutenticacaoSS.getSenha(), new ArrayList<>());
-
-			Authentication authentication = authenticationManager.authenticate(authenticationToken);
-			return authentication;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS();
+		theAutenticacaoSS.setLogin(request.getParameter("login"));
+		theAutenticacaoSS.setSenha(request.getParameter("senha"));					
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+				theAutenticacaoSS.getLogin(), theAutenticacaoSS.getSenha(), new ArrayList<>());
+		Authentication authentication = authenticationManager.authenticate(authenticationToken);
+		return authentication;
 	}
 
 	@Override

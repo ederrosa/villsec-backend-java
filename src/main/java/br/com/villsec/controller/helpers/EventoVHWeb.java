@@ -13,7 +13,7 @@ public class EventoVHWeb {
 
 	public Evento create(EventoDTO objDTO) {
 
-		Evento theEvento = new Evento(null, objDTO.getClassificacao(),
+		Evento theEvento = new Evento(null, false, objDTO.getClassificacao(),
 				(objDTO.getDiaInicio() == null || objDTO.getDiaInicio().isEmpty()) ? null
 						: DateUtilities.dateFormat(objDTO.getDiaInicio()),
 				(objDTO.getDiaTermino() == null || objDTO.getDiaTermino().isEmpty()) ? null

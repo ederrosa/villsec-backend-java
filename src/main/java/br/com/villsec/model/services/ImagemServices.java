@@ -18,7 +18,6 @@ import br.com.villsec.model.entities.domain.Imagem;
 import br.com.villsec.model.entities.domain.Arquivo;
 import br.com.villsec.model.entities.domain.Galeria;
 import br.com.villsec.model.entities.enums.Perfil;
-import br.com.villsec.model.repository.IGaleriaRepository;
 import br.com.villsec.model.repository.IImagemRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
 import br.com.villsec.model.services.exceptions.DataIntegrityException;
@@ -32,7 +31,7 @@ public class ImagemServices {
 	private IImagemRepository theIImagemRepository;
 
 	@Autowired
-	private IGaleriaRepository theIGaleriaRepository;
+	private GaleriaServices theGaleriaService;
 
 	@Autowired
 	private S3Service theS3Service;
@@ -51,7 +50,7 @@ public class ImagemServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Galeria theGaleria = theIGaleriaRepository.findById(theGaleriaID).get();
+		Galeria theGaleria = theGaleriaService.find(theGaleriaID);
 		theGaleria.getTheImagens().add(theEntidade);
 		theEntidade.setTheGaleria(theGaleria);
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
@@ -77,7 +76,7 @@ public class ImagemServices {
 	public Page<Imagem> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction,
 			Long theGaleriaID) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theIImagemRepository.findAllByTheGaleria(theIGaleriaRepository.findById(theGaleriaID).get(), pageRequest);
+		return theIImagemRepository.findAllByTheGaleria(theGaleriaService.find(theGaleriaID), pageRequest);
 	}
 
 	public Imagem update(Imagem theEntidade, MultipartFile theMultipartFile) {

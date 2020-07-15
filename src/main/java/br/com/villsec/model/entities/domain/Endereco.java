@@ -4,6 +4,7 @@ import java.net.URI;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 @Entity
 public class Endereco extends EntidadeDominio {
@@ -18,6 +19,8 @@ public class Endereco extends EntidadeDominio {
 	private String cidade;
 	@Column(columnDefinition = "VARCHAR(50)")
 	private String estado;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI googleMapsUrl;
 	@Column(columnDefinition = "VARCHAR(100)")
 	private String logradouro;

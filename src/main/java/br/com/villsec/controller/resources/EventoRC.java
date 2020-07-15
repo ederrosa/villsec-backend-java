@@ -34,7 +34,7 @@ public class EventoRC {
 	public ResponseEntity<Void> insert(@Valid EventoDTO objNewDTO,
 			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theEventoServices.insert(new EventoVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.buildAndExpand(this.theEventoServices.insert(new EventoVHWeb().create(objNewDTO), theMultipartFile).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -50,7 +50,7 @@ public class EventoRC {
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "diaInicio") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "DESC") String direction) {
-		Page<Evento> list = theEventoServices.findAllPage(page, linesPerPage, orderBy, direction);
+		Page<Evento> list = this.theEventoServices.findAllPage(page, linesPerPage, orderBy, direction);
 		Page<EventoDTO> listDTO = list.map(obj -> new EventoDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
@@ -62,15 +62,21 @@ public class EventoRC {
 		objDTO.setId(id);
 		Evento theEvento = theEventoServices.find(id);
 		new EventoVHWeb().update(theEvento, objDTO);
-		theEvento = theEventoServices.update(theEvento, theMultipartFile);
+		theEvento = this.theEventoServices.update(theEvento, theMultipartFile);
 		return ResponseEntity.noContent().build();
 	}
-
+	
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		find(id);
-		theEventoServices.delete(id);
+		this.theEventoServices.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(value = "/alertas/{id}", method = RequestMethod.POST)
+	public ResponseEntity<Void> enviarAlerta(@PathVariable Long id) {
+		this.theEventoServices.enviarAlerta(id);
 		return ResponseEntity.noContent().build();
 	}
 }

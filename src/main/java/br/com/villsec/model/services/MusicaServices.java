@@ -18,7 +18,6 @@ import br.com.villsec.model.entities.domain.Musica;
 import br.com.villsec.model.entities.domain.Album;
 import br.com.villsec.model.entities.domain.Arquivo;
 import br.com.villsec.model.entities.enums.Perfil;
-import br.com.villsec.model.repository.IAlbumRepository;
 import br.com.villsec.model.repository.IMusicaRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
 import br.com.villsec.model.services.exceptions.DataIntegrityException;
@@ -31,7 +30,7 @@ public class MusicaServices {
 	@Autowired
 	private IMusicaRepository theMusicaRepository;
 	@Autowired
-	private IAlbumRepository theAlbumRepository;
+	private AlbumServices theAlbumServices;
 	@Autowired
 	private S3Service theS3Service;
 	@Autowired
@@ -47,7 +46,7 @@ public class MusicaServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Album theAlbum = theAlbumRepository.findById(theAlbumID).get();
+		Album theAlbum = theAlbumServices.find(theAlbumID);
 		theAlbum.getTheMusicas().add(theEntidade);
 		theEntidade.setTheAlbum(theAlbum);
 		String fileName = prefix + theAlbum.getNome() + "/" + theEntidade.getNome() + "."
@@ -72,7 +71,7 @@ public class MusicaServices {
 			Long theAlbum) {
 
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theMusicaRepository.findAllByTheAlbum(theAlbumRepository.findById(theAlbum).get(), pageRequest);
+		return theMusicaRepository.findAllByTheAlbum(theAlbumServices.find(theAlbum), pageRequest);
 	}
 
 	public Musica update(Musica theEntidade, MultipartFile theMultipartFile) {
@@ -81,7 +80,6 @@ public class MusicaServices {
 				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			String fileName = prefix + theEntidade.getTheAlbum().getNome() + "/" + theEntidade.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());

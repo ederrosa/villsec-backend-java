@@ -1,6 +1,7 @@
 package br.com.villsec.model.services;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
@@ -49,7 +50,7 @@ public class SeguidorServices {
 	@Transactional
 	public Seguidor insert(Seguidor theSeguidor, MultipartFile theMultipartFile) {
 
-		theSeguidor.getTheAutenticacaoSS().setMatricula(new CodeUtilities().geradorDeMatricula(theUserLoggedInService));
+		theSeguidor.getTheAutenticacaoSS().setMatricula(new CodeUtilities().registrationGenerator(theUserLoggedInService));
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
@@ -72,6 +73,10 @@ public class SeguidorServices {
 		Optional<Seguidor> theSeguidor = theISeguidorRepository.findById(id);
 		return theSeguidor.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Seguidor.class.getSimpleName()));
+	}
+	
+	public List<Seguidor> findAllByCidade(String cidade){
+		return this.theISeguidorRepository.findAllByTheEnderecoCidade(cidade);
 	}
 
 	public Page<Seguidor> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {

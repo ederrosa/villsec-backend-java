@@ -4,8 +4,10 @@ import java.net.URI;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -18,6 +20,7 @@ public class Evento extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
 
+	private boolean alerta;
 	private String classificacao;
 	private String descricao;
 	private Date diaInicio;
@@ -27,6 +30,8 @@ public class Evento extends EntidadeDominio {
 	private Arquivo folder;
 	private String horaInicio;
 	private String horaTermino;
+	@Lob
+	@Column(columnDefinition = "BLOB")
 	private URI ingressoUrl;
 	private String nome;
 	private Integer tipoEvento;
@@ -38,9 +43,10 @@ public class Evento extends EntidadeDominio {
 
 	}
 
-	public Evento(Long id, String classificacao, Date diaInicio, Date diaTermino, String descricao, Arquivo folder,
+	public Evento(Long id, boolean alerta, String classificacao, Date diaInicio, Date diaTermino, String descricao, Arquivo folder,
 			String horaInicio, String horaTermino, URI ingressoUrl, String nome, TipoEvento tipoEvento, Endereco theEndereco) {
 		super(id);
+		this.alerta = alerta;
 		this.classificacao = classificacao;
 		this.diaInicio = diaInicio;
 		this.diaTermino = diaTermino;
@@ -52,6 +58,14 @@ public class Evento extends EntidadeDominio {
 		this.nome = nome;
 		this.tipoEvento = (tipoEvento == null) ? null : tipoEvento.getCodigo();
 		this.theEndereco = theEndereco;
+	}
+	
+	public boolean isAlerta() {
+		return alerta;
+	}
+
+	public void setAlerta(boolean alerta) {
+		this.alerta = alerta;
 	}
 
 	public String getClassificacao() {

@@ -54,7 +54,7 @@ public class AlbumServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		theEntidade.setCodigo(new CodeUtilities().codigoAlbum(theAlbumRepository));
+		theEntidade.setCodigo(new CodeUtilities().albumCode(theAlbumRepository));
 		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
 		String fileName = prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
