@@ -136,5 +136,6 @@ public class EventoServices {
 			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail());
 		}	
 		theEvento.setAlerta(true);
+		theEventoRepository.save(theEvento);
 	}
 }

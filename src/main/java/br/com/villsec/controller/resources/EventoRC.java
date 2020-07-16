@@ -74,7 +74,7 @@ public class EventoRC {
 	}
 	
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/alertas/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/alertas/{id}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Void> enviarAlerta(@PathVariable Long id) {
 		this.theEventoServices.enviarAlerta(id);
 		return ResponseEntity.noContent().build();
