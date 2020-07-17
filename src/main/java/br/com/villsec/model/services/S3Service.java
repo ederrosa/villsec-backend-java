@@ -41,8 +41,8 @@ public class S3Service {
 		try {
 			ObjectMetadata meta = new ObjectMetadata();
 			meta.setContentType(contentType);
-			s3client.putObject(bucketName, fileName, is, meta);
-			return s3client.getUrl(bucketName, fileName).toURI();
+			this.s3client.putObject(this.bucketName, fileName, is, meta);
+			return this.s3client.getUrl(this.bucketName, fileName).toURI();
 		} catch (URISyntaxException e) {
 			throw new FileException("Erro ao converter URL para URI");
 		}
@@ -50,8 +50,8 @@ public class S3Service {
 
 	public void deleteFile(String fileName) {
 
-		if (s3client.doesObjectExist(bucketName, fileName))
-			s3client.deleteObject(bucketName, fileName);
+		if (this.s3client.doesObjectExist(this.bucketName, fileName))
+			this.s3client.deleteObject(this.bucketName, fileName);
 	}
 	
 }

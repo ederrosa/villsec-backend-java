@@ -40,10 +40,10 @@ public abstract class AbstractEmailServices implements IEmailServices {
 	}
 
 	protected MimeMessage prepareNewPasswordHtmlEmail(AutenticacaoSS cliente, String newPass) throws MessagingException {
-		MimeMessage theMimeMessage = theJavaMailSender.createMimeMessage();
+		MimeMessage theMimeMessage = this.theJavaMailSender.createMimeMessage();
 		MimeMessageHelper theMimeMessageHelper = new MimeMessageHelper(theMimeMessage, true);
 		theMimeMessageHelper.setTo(cliente.getLogin());
-		theMimeMessageHelper.setFrom(sender);
+		theMimeMessageHelper.setFrom(this.sender);
 		theMimeMessageHelper.setSubject("V1llsec: Solicitação de nova senha:");
 		theMimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));
 		theMimeMessageHelper.setText(htmlFromTemplateNewPassword(cliente), true);
@@ -53,13 +53,13 @@ public abstract class AbstractEmailServices implements IEmailServices {
 	protected String htmlFromTemplateNewPassword(AutenticacaoSS theAutenticacaoSS) {
 		Context context = new Context();
 		context.setVariable("element", theAutenticacaoSS);
-		return theTemplateEngine.process("forgot/reset_password", context);
+		return this.theTemplateEngine.process("forgot/reset_password", context);
 	}
 
 	protected String htmlFromTemplateEvento(Evento obj) {
 		Context context = new Context();
 		context.setVariable("evento", obj);
-		return theTemplateEngine.process("alerta/evento/event_alert", context);
+		return this.theTemplateEngine.process("alerta/evento/event_alert", context);
 	}
 
 	@Override
@@ -74,10 +74,10 @@ public abstract class AbstractEmailServices implements IEmailServices {
 	}
 
 	protected MimeMessage prepareMimeMessageFromEvento(Evento theEvento, Email theEmail) throws MessagingException {
-		MimeMessage theMimeMessage = theJavaMailSender.createMimeMessage();
+		MimeMessage theMimeMessage = this.theJavaMailSender.createMimeMessage();
 		MimeMessageHelper theMimeMessageHelper = new MimeMessageHelper(theMimeMessage, true);
 		theMimeMessageHelper.setTo(theEmail.getEmail());
-		theMimeMessageHelper.setFrom(sender);
+		theMimeMessageHelper.setFrom(this.sender);
 		theMimeMessageHelper.setSubject("V1LLSEC -- Alerta de novo evento próximo a você: " + theEvento.getNome());
 		theMimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));
 		theMimeMessageHelper.setText(htmlFromTemplateEvento(theEvento), true);

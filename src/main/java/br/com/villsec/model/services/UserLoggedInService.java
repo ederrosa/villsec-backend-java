@@ -32,11 +32,11 @@ public class UserLoggedInService {
 		if (authenticated() == null) {
 			throw new AuthorizationException("Acesso negado, erro de validação de usuario");
 		}
-		return theIPessoaRepository.findByTheAutenticacaoSS(authenticated());
+		return this.theIPessoaRepository.findByTheAutenticacaoSS(authenticated());
 	}
 	
 	public Boolean IsThereMatricula(String matricula) {
-		return (theIAutenticacaoSSRepository.findByMatricula(matricula) == null) ? false : true;		
+		return (this.theIAutenticacaoSSRepository.findByMatricula(matricula) == null) ? false : true;		
 	}
 
 }

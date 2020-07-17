@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,9 @@ public class SeguidorServices {
 	@Autowired
 	private ImageUtilities theImageUtilities;
 
+	@Autowired
+	private BCryptPasswordEncoder theBCryptPasswordEncoder;
+
 	@Value("${prefix.perfil.profile}")
 	private String prefix;
 
@@ -50,19 +54,22 @@ public class SeguidorServices {
 	@Transactional
 	public Seguidor insert(Seguidor theSeguidor, MultipartFile theMultipartFile) {
 
-		theSeguidor.getTheAutenticacaoSS().setMatricula(new CodeUtilities().registrationGenerator(theUserLoggedInService));
-		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		theSeguidor.getTheAutenticacaoSS()
+				.setMatricula(new CodeUtilities().registrationGenerator(theUserLoggedInService));
+		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
 		jpgImage = theImageUtilities.cropSquare(jpgImage);
 		jpgImage = theImageUtilities.resize(jpgImage, size);
-		theSeguidor.getTheAutenticacaoSS().setNomeImgPerfil(prefix + theSeguidor.getTheAutenticacaoSS().getMatricula()
-				+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
 		theSeguidor.getTheAutenticacaoSS()
-				.setUriImgPerfil(theS3Service.uploadFile(
-						theImageUtilities.getInputStream(jpgImage,
+				.setNomeImgPerfil(this.prefix + theSeguidor.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
+						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+		theSeguidor.getTheAutenticacaoSS()
+				.setUriImgPerfil(this.theS3Service.uploadFile(
+						this.theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 						theSeguidor.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
-		theSeguidor = theISeguidorRepository.save(theSeguidor);
-		return theSeguidor;
+		theSeguidor.getTheAutenticacaoSS()
+				.setSenha(this.theBCryptPasswordEncoder.encode(theSeguidor.getTheAutenticacaoSS().getSenha()));
+		return theISeguidorRepository.save(theSeguidor);
 	}
 
 	public Seguidor find(Long id) {
@@ -74,8 +81,8 @@ public class SeguidorServices {
 		return theSeguidor.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Seguidor.class.getSimpleName()));
 	}
-	
-	public List<Seguidor> findAllByCidade(String cidade){
+
+	public List<Seguidor> findAllByCidade(String cidade) {
 		return this.theISeguidorRepository.findAllByTheEnderecoCidade(cidade);
 	}
 
@@ -85,11 +92,11 @@ public class SeguidorServices {
 		if (UserLoggedInService.authenticated() != null) {
 			switch (UserLoggedInService.authenticated().getTipoUsuario()) {
 			case PROPRIETARIO:
-				return theISeguidorRepository.findAll(pageRequest);
+				return this.theISeguidorRepository.findAll(pageRequest);
 			case ADMINISTRADOR:
-				return theISeguidorRepository.findAll(pageRequest);
+				return this.theISeguidorRepository.findAll(pageRequest);
 			case SEGUIDOR:
-				return theISeguidorRepository.findAllByTheAutenticacaoSS(UserLoggedInService.authenticated(),
+				return this.theISeguidorRepository.findAllByTheAutenticacaoSS(UserLoggedInService.authenticated(),
 						pageRequest);
 			default:
 				throw new AuthorizationException("Acesso negado! - Você não possui permissão para executar esta ação!");
@@ -102,25 +109,29 @@ public class SeguidorServices {
 	public Seguidor update(Seguidor theSeguidor, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() != null
-				&& theUserLoggedInService.userLoggedIn().getId() == theSeguidor.getId()
+				&& this.theUserLoggedInService.userLoggedIn().getId() == theSeguidor.getId()
 				|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 			if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-				BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-				jpgImage = theImageUtilities.cropSquare(jpgImage);
-				jpgImage = theImageUtilities.resize(jpgImage, size);
+				BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+				jpgImage = this.theImageUtilities.cropSquare(jpgImage);
+				jpgImage = this.theImageUtilities.resize(jpgImage, size);
 				theSeguidor.getTheAutenticacaoSS()
-						.setNomeImgPerfil(prefix + theSeguidor.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
-								+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+						.setNomeImgPerfil(this.prefix + theSeguidor.getTheAutenticacaoSS().getMatricula()
+								+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
 				theSeguidor.getTheAutenticacaoSS()
 						.setUriImgPerfil(
-								theS3Service
+								this.theS3Service
 										.uploadFile(
-												theImageUtilities.getInputStream(jpgImage,
+												this.theImageUtilities.getInputStream(jpgImage,
 														FilenameUtils
 																.getExtension(theMultipartFile.getOriginalFilename())),
 												theSeguidor.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
 			}
-			return theISeguidorRepository.save(theSeguidor);
+			if (theSeguidor.getTheAutenticacaoSS().getSenha().length() < 21) {
+				theSeguidor.getTheAutenticacaoSS()
+						.setSenha(this.theBCryptPasswordEncoder.encode(theSeguidor.getTheAutenticacaoSS().getSenha()));
+			}
+			return this.theISeguidorRepository.save(theSeguidor);
 		} else {
 			throw new AuthorizationException("Acesso negado! - Você não possui permissão para Alterar esta Seguidor!");
 		}
@@ -131,9 +142,9 @@ public class SeguidorServices {
 			if (UserLoggedInService.authenticated() != null && theUserLoggedInService.userLoggedIn().getId() == id
 					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
-					theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
+					this.theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
 				}
-				theISeguidorRepository.deleteById(id);
+				this.theISeguidorRepository.deleteById(id);
 			} else {
 				throw new AuthorizationException(
 						"Acesso negado! - Você não possui permissão para excluir esta Seguidor!");

@@ -20,7 +20,7 @@ public class JWTUtil {
 
 	public String generateToken(String username) {
 		return Jwts.builder().setSubject(username).setExpiration(new Date(System.currentTimeMillis() + expiration))
-				.signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
+				.signWith(SignatureAlgorithm.HS512, this.secret.getBytes()).compact();
 	}
 
 	public boolean tokenValido(String token) {
@@ -46,7 +46,7 @@ public class JWTUtil {
 
 	private Claims getClaims(String token) {
 		try {
-			return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
+			return Jwts.parser().setSigningKey(this.secret.getBytes()).parseClaimsJws(token).getBody();
 		} catch (Exception e) {
 			return null;
 		}

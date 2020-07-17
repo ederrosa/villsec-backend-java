@@ -50,15 +50,15 @@ public class CodeUtilities {
 	}
 
 	private char randomChar() {
-		int opt = rand.nextInt(3);
+		int opt = this.rand.nextInt(3);
 		if (opt == 0) { // gera um digito
 			return (char) (rand.nextInt(10) + 48);
 		}
 		else if (opt == 1) { // gera letra maiuscula
-			return (char) (rand.nextInt(26) + 65);
+			return (char) (this.rand.nextInt(26) + 65);
 		}
 		else { // gera letra minuscula
-			return (char) (rand.nextInt(26) + 97);
+			return (char) (this.rand.nextInt(26) + 97);
 		}
 	}
 }

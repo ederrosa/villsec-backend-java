@@ -13,7 +13,7 @@ public class ValidationError extends StandardError{
 	}
 
 	public List<FieldMessage> getErrors() {
-		return errors;
+		return this.errors;
 	}
 
 	public void addError(String fieldName, String messagem) {

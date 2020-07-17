@@ -57,22 +57,22 @@ public class EventoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEvento.setId(null);
-		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = theImageUtilities.cropSquare(jpgImage);
-		jpgImage = theImageUtilities.resize(jpgImage, size);
-		String fileName = prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
+		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		jpgImage = this.theImageUtilities.cropSquare(jpgImage);
+		jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
+		String fileName = this.prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
 				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 		Arquivo theFile = new Arquivo(null, fileName,
-				theS3Service.uploadFile(
-						theImageUtilities.getInputStream(jpgImage,
+				this.theS3Service.uploadFile(
+						this.theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 						fileName, theMultipartFile.getContentType()));
 		theEvento.setFolder(theFile);
-		return theEventoRepository.save(theEvento);
+		return this.theEventoRepository.save(theEvento);
 	}
 
 	public Evento find(Long id) {
-		Optional<Evento> theEvento = theEventoRepository.findById(id);
+		Optional<Evento> theEvento = this.theEventoRepository.findById(id);
 		return theEvento.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Evento.class.getSimpleName()));
 	}
@@ -80,7 +80,7 @@ public class EventoServices {
 	public Page<Evento> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theEventoRepository.findAll(pageRequest);
+		return this.theEventoRepository.findAll(pageRequest);
 	}
 
 	public Evento update(Evento theEvento, MultipartFile theMultipartFile) {
@@ -90,20 +90,20 @@ public class EventoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-			theS3Service.deleteFile(theEvento.getFolder().getNome());
-			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-			jpgImage = theImageUtilities.cropSquare(jpgImage);
-			jpgImage = theImageUtilities.resize(jpgImage, size);
-			String fileName = prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
+			this.theS3Service.deleteFile(theEvento.getFolder().getNome());
+			BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+			jpgImage = this.theImageUtilities.cropSquare(jpgImage);
+			jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
+			String fileName = this.prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 			Arquivo theFile = new Arquivo(null, fileName,
-					theS3Service.uploadFile(
-							theImageUtilities.getInputStream(jpgImage,
+					this.theS3Service.uploadFile(
+							this.theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 							fileName, theMultipartFile.getContentType()));
 			theEvento.setFolder(theFile);
 		}
-		return theEventoRepository.save(theEvento);
+		return this.theEventoRepository.save(theEvento);
 	}
 
 	public void delete(Long id) {
@@ -114,9 +114,9 @@ public class EventoServices {
 		}
 		try {
 			if (find(id).getFolder() != null) {
-				theS3Service.deleteFile(find(id).getFolder().getNome());
+				this.theS3Service.deleteFile(find(id).getFolder().getNome());
 			}
-			theEventoRepository.deleteById(id);
+			this.theEventoRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Eventos relacionados");
 		}
@@ -136,6 +136,6 @@ public class EventoServices {
 			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail());
 		}	
 		theEvento.setAlerta(true);
-		theEventoRepository.save(theEvento);
+		this.theEventoRepository.save(theEvento);
 	}
 }

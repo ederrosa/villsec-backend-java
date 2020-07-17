@@ -19,6 +19,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Length(max = 20, message = "O tamanho deve ser no máximo 20 caracteres")
 	private String senha;
 	private String login;
 	private String matricula;

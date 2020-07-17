@@ -50,21 +50,21 @@ public class ImagemServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Galeria theGaleria = theGaleriaService.find(theGaleriaID);
+		Galeria theGaleria = this.theGaleriaService.find(theGaleriaID);
 		theGaleria.getTheImagens().add(theEntidade);
 		theEntidade.setTheGaleria(theGaleria);
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-			String fileName = prefix + "/" + theEntidade.getTitulo() + "."
+			String fileName = this.prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, theS3Service.uploadFile(
-					theImageUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
+					this.theImageUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
-		return theIImagemRepository.save(theEntidade);
+		return this.theIImagemRepository.save(theEntidade);
 	}
 
 	public Imagem find(Long id) {
-		Optional<Imagem> theEntidade = theIImagemRepository.findById(id);
+		Optional<Imagem> theEntidade = this.theIImagemRepository.findById(id);
 		return theEntidade.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Imagem.class.getSimpleName()));
 	}
@@ -76,7 +76,7 @@ public class ImagemServices {
 	public Page<Imagem> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction,
 			Long theGaleriaID) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theIImagemRepository.findAllByTheGaleria(theGaleriaService.find(theGaleriaID), pageRequest);
+		return this.theIImagemRepository.findAllByTheGaleria(this.theGaleriaService.find(theGaleriaID), pageRequest);
 	}
 
 	public Imagem update(Imagem theEntidade, MultipartFile theMultipartFile) {
@@ -86,14 +86,14 @@ public class ImagemServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-			theS3Service.deleteFile(theEntidade.getTheArquivo().getNome());
-			String fileName = prefix + "/" + theEntidade.getTitulo() + "."
+			this.theS3Service.deleteFile(theEntidade.getTheArquivo().getNome());
+			String fileName = this.prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, theS3Service.uploadFile(
-					theImageUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
+					this.theImageUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
-		return theIImagemRepository.save(theEntidade);
+		return this.theIImagemRepository.save(theEntidade);
 	}
 
 	public void delete(Long id) {
@@ -104,9 +104,9 @@ public class ImagemServices {
 		}
 		try {
 			if (find(id).getTheArquivo() != null) {
-				theS3Service.deleteFile(find(id).getTheArquivo().getNome());
+				this.theS3Service.deleteFile(find(id).getTheArquivo().getNome());
 			}
-			theIImagemRepository.deleteById(id);
+			this.theIImagemRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
 		}

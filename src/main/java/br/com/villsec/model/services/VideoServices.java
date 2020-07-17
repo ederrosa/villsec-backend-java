@@ -50,21 +50,21 @@ public class VideoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Galeria theGaleria = theGaleriaServices.find(theGaleriaID);
+		Galeria theGaleria = this.theGaleriaServices.find(theGaleriaID);
 		theGaleria.getTheVideos().add(theEntidade);
 		theEntidade.setTheGaleria(theGaleria);
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			String fileName = prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, theS3Service.uploadFile(
-					theVideoUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
+					this.theVideoUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
-		return theIVideoRepository.save(theEntidade);
+		return this.theIVideoRepository.save(theEntidade);
 	}
 
 	public Video find(Long id) {
-		Optional<Video> theEntidade = theIVideoRepository.findById(id);
+		Optional<Video> theEntidade = this.theIVideoRepository.findById(id);
 		return theEntidade.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Video.class.getSimpleName()));
 	}
@@ -76,7 +76,7 @@ public class VideoServices {
 	public Page<Video> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction,
 			Long theGaleriaID) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theIVideoRepository.findAllByTheGaleria(theGaleriaServices.find(theGaleriaID), pageRequest);
+		return this.theIVideoRepository.findAllByTheGaleria(this.theGaleriaServices.find(theGaleriaID), pageRequest);
 	}
 
 	public Video update(Video theEntidade, MultipartFile theMultipartFile) {
@@ -86,14 +86,14 @@ public class VideoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-			theS3Service.deleteFile(theEntidade.getTheArquivo().getNome());
+			this.theS3Service.deleteFile(theEntidade.getTheArquivo().getNome());
 			String fileName = prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, theS3Service.uploadFile(
-					theVideoUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
+					this.theVideoUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
-		return theIVideoRepository.save(theEntidade);
+		return this.theIVideoRepository.save(theEntidade);
 	}
 
 	public void delete(Long id) {
@@ -104,9 +104,9 @@ public class VideoServices {
 		}
 		try {
 			if (find(id).getTheArquivo() != null) {
-				theS3Service.deleteFile(find(id).getTheArquivo().getNome());
+				this.theS3Service.deleteFile(find(id).getTheArquivo().getNome());
 			}
-			theIVideoRepository.deleteById(id);
+			this.theIVideoRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
 		}

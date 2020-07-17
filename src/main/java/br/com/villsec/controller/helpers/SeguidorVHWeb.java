@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import br.com.villsec.model.entities.domain.Seguidor;
 import br.com.villsec.model.entities.domain.AutenticacaoSS;
 import br.com.villsec.model.entities.domain.Email;
@@ -24,7 +22,7 @@ public class SeguidorVHWeb {
 		Set<Perfil> thePerfis = new LinkedHashSet<>();
 		thePerfis.add(Perfil.SEGUIDOR);
 		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null, null, thePerfis,
-				new BCryptPasswordEncoder().encode(objDTO.getSenha()), Perfil.SEGUIDOR, null);
+				objDTO.getSenha(), Perfil.SEGUIDOR, null);
 		Email theEmail = new Email(null, objDTO.getEmail());
 		Endereco theEndereco = new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(),
 				objDTO.getEstado(), objDTO.getLogradouro(), objDTO.getPais());
@@ -49,7 +47,7 @@ public class SeguidorVHWeb {
 		theSeguidor.getTheAutenticacaoSS()
 				.setSenha((objDTO.getSenha() == null || objDTO.getSenha().isEmpty())
 						? theSeguidor.getTheAutenticacaoSS().getSenha()
-						: new BCryptPasswordEncoder().encode(objDTO.getSenha()));
+						: objDTO.getSenha());
 		theSeguidor.getTheAutenticacaoSS()
 				.setLogin((objDTO.getEmail() == null || objDTO.getEmail().isEmpty())
 						? theSeguidor.getTheEmail().getEmail()

@@ -12,7 +12,7 @@ public class SmtpEmailServices extends AbstractEmailServices{
 	
 	@Override
 	public void sendHtmlEmail(MimeMessage msg) {
-		theJavaMailSender.send(msg);
+		this.theJavaMailSender.send(msg);
 	}
 
 }

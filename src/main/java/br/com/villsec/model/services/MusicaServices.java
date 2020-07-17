@@ -29,12 +29,16 @@ public class MusicaServices {
 
 	@Autowired
 	private IMusicaRepository theMusicaRepository;
+	
 	@Autowired
 	private AlbumServices theAlbumServices;
+	
 	@Autowired
 	private S3Service theS3Service;
+	
 	@Autowired
 	private AudioUtilities theAudioUtilities;
+	
 	@Value("${prefix.album.profile}")
 	private String prefix;
 
@@ -46,19 +50,19 @@ public class MusicaServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Album theAlbum = theAlbumServices.find(theAlbumID);
+		Album theAlbum = this.theAlbumServices.find(theAlbumID);
 		theAlbum.getTheMusicas().add(theEntidade);
 		theEntidade.setTheAlbum(theAlbum);
-		String fileName = prefix + theAlbum.getNome() + "/" + theEntidade.getNome() + "."
+		String fileName = this.prefix + theAlbum.getNome() + "/" + theEntidade.getNome() + "."
 				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-		Arquivo theFile = new Arquivo(null, fileName, theS3Service.uploadFile(
-				theAudioUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+		Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
+				this.theAudioUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 		theEntidade.setTheArquivo(theFile);
-		return theMusicaRepository.save(theEntidade);
+		return this.theMusicaRepository.save(theEntidade);
 	}
 
 	public Musica find(Long id) {
-		Optional<Musica> theEntidade = theMusicaRepository.findById(id);
+		Optional<Musica> theEntidade = this.theMusicaRepository.findById(id);
 		return theEntidade.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Musica.class.getSimpleName()));
 	}
@@ -71,7 +75,7 @@ public class MusicaServices {
 			Long theAlbum) {
 
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theMusicaRepository.findAllByTheAlbum(theAlbumServices.find(theAlbum), pageRequest);
+		return this.theMusicaRepository.findAllByTheAlbum(this.theAlbumServices.find(theAlbum), pageRequest);
 	}
 
 	public Musica update(Musica theEntidade, MultipartFile theMultipartFile) {
@@ -81,13 +85,13 @@ public class MusicaServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-			String fileName = prefix + theEntidade.getTheAlbum().getNome() + "/" + theEntidade.getNome() + "."
+			String fileName = this.prefix + theEntidade.getTheAlbum().getNome() + "/" + theEntidade.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, theS3Service.uploadFile(
-					theAudioUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
+					this.theAudioUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
-		return theMusicaRepository.save(theEntidade);
+		return this.theMusicaRepository.save(theEntidade);
 	}
 
 	public void delete(Long id) {
@@ -98,9 +102,9 @@ public class MusicaServices {
 		}
 		try {
 			if (find(id).getTheArquivo() != null) {
-				theS3Service.deleteFile(find(id).getTheArquivo().getNome());
+				this.theS3Service.deleteFile(find(id).getTheArquivo().getNome());
 			}
-			theMusicaRepository.deleteById(id);
+			this.theMusicaRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
 		}

@@ -23,13 +23,13 @@ public class AuthServices {
 	
 	public void sendNewPassword(String email) {
 
-		AutenticacaoSS theAutenticacaoSS = theIAutenticacaoSSRepository.findByLogin(email);
+		AutenticacaoSS theAutenticacaoSS = this.theIAutenticacaoSSRepository.findByLogin(email);
 		if (theAutenticacaoSS == null) {
 			throw new ObjectNotFoundException("Email não encontrado");
 		}
 		String newPass = new CodeUtilities().newPassword();
-		theAutenticacaoSS.setSenha(theBCryptPasswordEncoder.encode(newPass));
-	    theIAutenticacaoSSRepository.save(theAutenticacaoSS);
-		theIEmailServices.sendNewPasswordHtmlEmail(theAutenticacaoSS, newPass);
+		theAutenticacaoSS.setSenha(this.theBCryptPasswordEncoder.encode(newPass));
+	    this.theIAutenticacaoSSRepository.save(theAutenticacaoSS);
+		this.theIEmailServices.sendNewPasswordHtmlEmail(theAutenticacaoSS, newPass);
 	}
 }

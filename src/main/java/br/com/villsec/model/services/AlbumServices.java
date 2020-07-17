@@ -54,22 +54,22 @@ public class AlbumServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		theEntidade.setCodigo(new CodeUtilities().albumCode(theAlbumRepository));
-		BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = theImageUtilities.resize(jpgImage, size);
-		String fileName = prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
+		theEntidade.setCodigo(new CodeUtilities().albumCode(this.theAlbumRepository));
+		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
+		String fileName = this.prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
 				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 		Arquivo theFile = new Arquivo(null, fileName,
-				theS3Service.uploadFile(
-						theImageUtilities.getInputStream(jpgImage,
+				this.theS3Service.uploadFile(
+						this.theImageUtilities.getInputStream(jpgImage,
 								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 						fileName, theMultipartFile.getContentType()));
 		theEntidade.setCapa(theFile);
-		return theAlbumRepository.save(theEntidade);
+		return this.theAlbumRepository.save(theEntidade);
 	}
 
 	public Album find(Long id) {
-		Optional<Album> theEntidade = theAlbumRepository.findById(id);
+		Optional<Album> theEntidade = this.theAlbumRepository.findById(id);
 		return theEntidade.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Album.class.getSimpleName()));
 	}
@@ -77,7 +77,7 @@ public class AlbumServices {
 	public Page<Album> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theAlbumRepository.findAll(pageRequest);
+		return this.theAlbumRepository.findAll(pageRequest);
 	}
 
 	public Album update(Album theEntidade, MultipartFile theMultipartFile) {
@@ -87,20 +87,20 @@ public class AlbumServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
-			theS3Service.deleteFile(theEntidade.getCapa().getNome());
-			BufferedImage jpgImage = theImageUtilities.getJpgImageFromFile(theMultipartFile);
-			jpgImage = theImageUtilities.cropSquare(jpgImage);
-			jpgImage = theImageUtilities.resize(jpgImage, size);
-			String fileName = prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
+			this.theS3Service.deleteFile(theEntidade.getCapa().getNome());
+			BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+			jpgImage = this.theImageUtilities.cropSquare(jpgImage);
+			jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
+			String fileName = this.prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 			Arquivo theFile = new Arquivo(null, fileName,
-					theS3Service.uploadFile(
-							theImageUtilities.getInputStream(jpgImage,
+					this.theS3Service.uploadFile(
+							this.theImageUtilities.getInputStream(jpgImage,
 									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
 							fileName, theMultipartFile.getContentType()));
 			theEntidade.setCapa(theFile);
 		}
-		return theAlbumRepository.save(theEntidade);
+		return this.theAlbumRepository.save(theEntidade);
 	}
 
 	public void delete(Long id) {
@@ -111,12 +111,12 @@ public class AlbumServices {
 		}
 		try {
 			if (find(id).getCapa() != null) {
-				theS3Service.deleteFile(find(id).getCapa().getNome());
+				this.theS3Service.deleteFile(find(id).getCapa().getNome());
 			}
 			for(Musica theMusica : this.theMusicaServices.findAll(this.find(id))) {
 				this.theMusicaServices.delete(theMusica.getId());			
 			}
-			theAlbumRepository.deleteById(id);
+			this.theAlbumRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
 		}

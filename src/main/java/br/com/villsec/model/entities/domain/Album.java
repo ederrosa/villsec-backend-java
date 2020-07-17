@@ -16,6 +16,7 @@ import org.hibernate.annotations.DynamicInsert;
 public class Album extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
+	
 	private String ano;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "File_ID")
@@ -31,7 +32,8 @@ public class Album extends EntidadeDominio {
 	public Album() {
 	}
 
-	public Album(Long id, String ano, Arquivo capa, String codigo, String descricao, String genero, String nome, Set<Musica> theMusicas) {
+	public Album(Long id, String ano, Arquivo capa, String codigo, String descricao, String genero, String nome,
+			Set<Musica> theMusicas) {
 		super(id);
 		this.ano = ano;
 		this.capa = capa;

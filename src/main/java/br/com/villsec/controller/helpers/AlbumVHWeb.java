@@ -7,15 +7,15 @@ public class AlbumVHWeb {
 
 	public Album create(AlbumDTO objDTO) {
 
-		Album theAlbum = new Album(null, objDTO.getAno(), null, null, objDTO.getDescricao(), objDTO.getGenero(), objDTO.getNome(), null);
-		return theAlbum;
+		return new Album(null, objDTO.getAno(), null, null, objDTO.getDescricao(), objDTO.getGenero(), objDTO.getNome(),
+				null);
 	}
-	
+
 	public void update(Album theAlbum, AlbumDTO objDTO) {
-		
+
 		theAlbum.setAno(objDTO.getAno());
 		theAlbum.setDescricao(objDTO.getDescricao());
 		theAlbum.setGenero(objDTO.getGenero());
-		theAlbum.setNome(objDTO.getNome());		
+		theAlbum.setNome(objDTO.getNome());
 	}
 }

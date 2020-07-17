@@ -35,12 +35,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 
-		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS();
-		theAutenticacaoSS.setLogin(request.getParameter("login"));
-		theAutenticacaoSS.setSenha(request.getParameter("senha"));					
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-				theAutenticacaoSS.getLogin(), theAutenticacaoSS.getSenha(), new ArrayList<>());
-		Authentication authentication = authenticationManager.authenticate(authenticationToken);
+				request.getParameter("login"), request.getParameter("senha"), new ArrayList<>());
+		Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
 		return authentication;
 	}
 
@@ -49,7 +46,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			Authentication authentication) throws IOException, ServletException {
 		
 		String username = ((AutenticacaoSS) authentication.getPrincipal()).getUsername();
-		String token = jwtUtil.generateToken(username);
+		String token = this.jwtUtil.generateToken(username);
 		response.addHeader("Authorization", "Bearer " + token);
 		response.addHeader("access-control-expose-headers", "Authorization");
 		response.addHeader("UserType", String.valueOf(((AutenticacaoSS) authentication.getPrincipal()).getTipoUsuario().getCodigo()));

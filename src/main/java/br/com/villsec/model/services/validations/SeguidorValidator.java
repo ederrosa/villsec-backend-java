@@ -28,9 +28,9 @@ public class SeguidorValidator implements ConstraintValidator<SeguidorAnnotation
 
 		List<FieldMessage> list = new ArrayList<>();
 
-		if (theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()) != null) {
+		if (this.theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()) != null) {
 			if (objDto.getId() == null
-					|| !theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()).getId().equals(objDto.getId())) {
+					|| !this.theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()).getId().equals(objDto.getId())) {
 				list.add(new FieldMessage("Email", "Email já existente e não pertece ao usuário em questão!"));
 			}
 		}

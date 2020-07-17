@@ -6,8 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import br.com.villsec.model.entities.domain.Proprietario;
 import br.com.villsec.model.entities.domain.AutenticacaoSS;
 import br.com.villsec.model.entities.domain.Email;
@@ -25,11 +23,11 @@ public class ProprietarioVHWeb {
 		Set<Perfil> thePerfis = new LinkedHashSet<>();
 		thePerfis.add(Perfil.PROPRIETARIO);
 		AutenticacaoSS theAutenticacaoSS = new AutenticacaoSS(null, objDTO.getEmail(), null, null, thePerfis,
-				new BCryptPasswordEncoder().encode(objDTO.getSenha()), Perfil.PROPRIETARIO, null);
+				objDTO.getSenha(), Perfil.PROPRIETARIO, null);
 		Email theEmail = new Email(null, objDTO.getEmail());
-		Endereco theEndereco = new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(), objDTO.getEstado(),
-				objDTO.getLogradouro(), objDTO.getPais());
-		if(objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
+		Endereco theEndereco = new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(),
+				objDTO.getEstado(), objDTO.getLogradouro(), objDTO.getPais());
+		if (objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
 			theEndereco.setGoogleMapsUrl(URI.create(objDTO.getGoogleMapsUrl()));
 		}
 		Proprietario theProprietario = new Proprietario(null, DateUtilities.dateFormat(objDTO.getDataNascimento()),
@@ -58,7 +56,7 @@ public class ProprietarioVHWeb {
 		theProprietario.getTheAutenticacaoSS()
 				.setSenha((objDTO.getSenha() == null || objDTO.getSenha().isEmpty())
 						? theProprietario.getTheAutenticacaoSS().getSenha()
-						: new BCryptPasswordEncoder().encode(objDTO.getSenha()));
+						: objDTO.getSenha());
 		theProprietario.getTheAutenticacaoSS()
 				.setLogin((objDTO.getEmail() == null || objDTO.getEmail().isEmpty())
 						? theProprietario.getTheEmail().getEmail()
@@ -91,7 +89,7 @@ public class ProprietarioVHWeb {
 				.setPais((objDTO.getPais() == null || objDTO.getPais().isEmpty())
 						? theProprietario.getTheEndereco().getPais()
 						: objDTO.getPais());
-		if(objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
+		if (objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
 			theProprietario.getTheEndereco().setGoogleMapsUrl(URI.create(objDTO.getGoogleMapsUrl()));
 		}
 		List<Telefone> theTelefones = new ArrayList<>();

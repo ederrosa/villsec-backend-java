@@ -39,18 +39,18 @@ public class GaleriaServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		return theGaleriaRepository.save(theEntidade);
+		return this.theGaleriaRepository.save(theEntidade);
 	}
 
 	public Galeria find(Long id) {
-		Optional<Galeria> theEntidade = theGaleriaRepository.findById(id);
+		Optional<Galeria> theEntidade = this.theGaleriaRepository.findById(id);
 		return theEntidade.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Galeria.class.getSimpleName()));
 	}
 
 	public Page<Galeria> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return theGaleriaRepository.findAll(pageRequest);
+		return this.theGaleriaRepository.findAll(pageRequest);
 	}
 
 	public Galeria update(Galeria theEntidade) {
@@ -59,7 +59,7 @@ public class GaleriaServices {
 				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		return theGaleriaRepository.save(theEntidade);
+		return this.theGaleriaRepository.save(theEntidade);
 	}
 
 	public void delete(Long id) {
@@ -75,7 +75,7 @@ public class GaleriaServices {
 			for(Video theMusica : this.theVideoServices.findAll(this.find(id))) {
 				this.theVideoServices.delete(theMusica.getId());			
 			}
-			theGaleriaRepository.deleteById(id);
+			this.theGaleriaRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
 		}

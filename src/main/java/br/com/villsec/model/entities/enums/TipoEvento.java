@@ -2,12 +2,14 @@ package br.com.villsec.model.entities.enums;
 
 public enum TipoEvento {
 
-	TIPO_1(1, "tipo 1"),
-	TIPO_2(2, "tipo 2"),
-	TIPO_3(3, "tipo 3"),
-	TIPO_4(4, "tipo 4"),
-	TIPO_5(5, "tipo 5"),
-	TIPO_6(6, "tipo 6");
+	ADULTO(1, "Adulto +18"),
+	INFANTIL(2, "Infantil"),
+	LGBTQ(3, "LGBTQ+"),
+	LIVE(4, "Live"),
+	PUBLICO(5, "Público"),
+	RESTRITO(6, "Restrito à Convidados"),
+	TERCEIRA_IDADE(7, "Terceira Idade"),
+	VIP(8, "tipo 6");
 	
 	private int codigo;
 	private String descricao;
