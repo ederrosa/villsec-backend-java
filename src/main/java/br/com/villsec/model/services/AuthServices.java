@@ -28,8 +28,8 @@ public class AuthServices {
 			throw new ObjectNotFoundException("Email não encontrado");
 		}
 		String newPass = new CodeUtilities().newPassword();
-		theAutenticacaoSS.setSenha(this.theBCryptPasswordEncoder.encode(newPass));
-	    this.theIAutenticacaoSSRepository.save(theAutenticacaoSS);
 		this.theIEmailServices.sendNewPasswordHtmlEmail(theAutenticacaoSS, newPass);
+		theAutenticacaoSS.setSenha(this.theBCryptPasswordEncoder.encode(newPass));
+	    this.theIAutenticacaoSSRepository.save(theAutenticacaoSS);		
 	}
 }

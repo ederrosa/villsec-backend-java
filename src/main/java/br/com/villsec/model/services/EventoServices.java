@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.villsec.model.entities.domain.Arquivo;
 import br.com.villsec.model.entities.domain.Evento;
+import br.com.villsec.model.entities.domain.Proprietario;
 import br.com.villsec.model.entities.domain.Seguidor;
 import br.com.villsec.model.entities.enums.Perfil;
 import br.com.villsec.model.repository.IEventoRepository;
@@ -36,6 +37,9 @@ public class EventoServices {
 
 	@Autowired
 	private SeguidorServices theSeguidoServices;
+	
+	@Autowired
+	private ProprietarioServices theProprietarioServices;
 
 	@Autowired
 	private IEmailServices theIEmailServices;
@@ -48,6 +52,9 @@ public class EventoServices {
 
 	@Value("${image.size}")
 	private Integer size;
+	
+	@Value("${default.principal}")
+	private Long proprietarioId;
 
 	@Transactional
 	public Evento insert(Evento theEvento, MultipartFile theMultipartFile) {
@@ -58,8 +65,6 @@ public class EventoServices {
 		}
 		theEvento.setId(null);
 		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = this.theImageUtilities.cropSquare(jpgImage);
-		jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
 		String fileName = this.prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
 				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 		Arquivo theFile = new Arquivo(null, fileName,
@@ -92,8 +97,6 @@ public class EventoServices {
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			this.theS3Service.deleteFile(theEvento.getFolder().getNome());
 			BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
-			jpgImage = this.theImageUtilities.cropSquare(jpgImage);
-			jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
 			String fileName = this.prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
 			Arquivo theFile = new Arquivo(null, fileName,
@@ -131,9 +134,10 @@ public class EventoServices {
 		if(theEvento.isAlerta()) {
 			throw new AuthorizationException("Acesso negado, alertas ja foram enviados anteriormente para este evento!!");
 		}		
+		Proprietario theProprietario = this.theProprietarioServices.find(this.proprietarioId);
 		List<Seguidor> theSeguidorList = this.theSeguidoServices.findAllByCidade(theEvento.getTheEndereco().getCidade());
 		for(Seguidor theSeguidor : theSeguidorList) {
-			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail());
+			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail(), theProprietario);
 		}	
 		theEvento.setAlerta(true);
 		this.theEventoRepository.save(theEvento);

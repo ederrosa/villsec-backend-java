@@ -9,7 +9,7 @@ public enum TipoEvento {
 	PUBLICO(5, "Público"),
 	RESTRITO(6, "Restrito à Convidados"),
 	TERCEIRA_IDADE(7, "Terceira Idade"),
-	VIP(8, "tipo 6");
+	VIP(8, "VIP");
 	
 	private int codigo;
 	private String descricao;

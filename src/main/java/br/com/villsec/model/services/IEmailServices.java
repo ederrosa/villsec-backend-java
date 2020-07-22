@@ -5,10 +5,11 @@ import javax.mail.internet.MimeMessage;
 import br.com.villsec.model.entities.domain.AutenticacaoSS;
 import br.com.villsec.model.entities.domain.Email;
 import br.com.villsec.model.entities.domain.Evento;
+import br.com.villsec.model.entities.domain.Proprietario;
 
 public interface IEmailServices {
 
-	void sendAlertaEventoHtmlEmail(Evento theEvento, Email theEmail);
+	void sendAlertaEventoHtmlEmail(Evento theEvento, Email theEmail, Proprietario theProprietario);
 	
 	void sendHtmlEmail(MimeMessage msg);
 	

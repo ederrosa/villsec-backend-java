@@ -15,6 +15,7 @@ import org.thymeleaf.context.Context;
 import br.com.villsec.model.entities.domain.AutenticacaoSS;
 import br.com.villsec.model.entities.domain.Email;
 import br.com.villsec.model.entities.domain.Evento;
+import br.com.villsec.model.entities.domain.Proprietario;
 
 public abstract class AbstractEmailServices implements IEmailServices {
 
@@ -36,51 +37,54 @@ public abstract class AbstractEmailServices implements IEmailServices {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
-	protected MimeMessage prepareNewPasswordHtmlEmail(AutenticacaoSS cliente, String newPass) throws MessagingException {
+	protected MimeMessage prepareNewPasswordHtmlEmail(AutenticacaoSS cliente, String newPass)
+			throws MessagingException {
 		MimeMessage theMimeMessage = this.theJavaMailSender.createMimeMessage();
 		MimeMessageHelper theMimeMessageHelper = new MimeMessageHelper(theMimeMessage, true);
 		theMimeMessageHelper.setTo(cliente.getLogin());
 		theMimeMessageHelper.setFrom(this.sender);
 		theMimeMessageHelper.setSubject("V1llsec: Solicitação de nova senha:");
 		theMimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));
-		theMimeMessageHelper.setText(htmlFromTemplateNewPassword(cliente), true);
+		theMimeMessageHelper.setText(htmlFromTemplateNewPassword(newPass), true);
 		return theMimeMessage;
 	}
 
-	protected String htmlFromTemplateNewPassword(AutenticacaoSS theAutenticacaoSS) {
+	protected String htmlFromTemplateNewPassword(String newPass) {
 		Context context = new Context();
-		context.setVariable("element", theAutenticacaoSS);
+		context.setVariable("senha", newPass);
 		return this.theTemplateEngine.process("forgot/reset_password", context);
 	}
 
-	protected String htmlFromTemplateEvento(Evento obj) {
+	protected String htmlFromTemplateEvento(Evento theEvento, Proprietario theProprietario) {
 		Context context = new Context();
-		context.setVariable("evento", obj);
+		context.setVariable("evento", theEvento);
+		context.setVariable("proprietario", theProprietario);
 		return this.theTemplateEngine.process("alerta/evento/event_alert", context);
 	}
 
 	@Override
-	public void sendAlertaEventoHtmlEmail(Evento theEvento, Email theEmail) {
+	public void sendAlertaEventoHtmlEmail(Evento theEvento, Email theEmail, Proprietario theProprietario) {
 		MimeMessage theMimeMessage;
 		try {
-			theMimeMessage = prepareMimeMessageFromEvento(theEvento, theEmail);
+			theMimeMessage = prepareMimeMessageFromEvento(theEvento, theEmail, theProprietario);
 			sendHtmlEmail(theMimeMessage);
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected MimeMessage prepareMimeMessageFromEvento(Evento theEvento, Email theEmail) throws MessagingException {
+	protected MimeMessage prepareMimeMessageFromEvento(Evento theEvento, Email theEmail, Proprietario theProprietario)
+			throws MessagingException {
 		MimeMessage theMimeMessage = this.theJavaMailSender.createMimeMessage();
 		MimeMessageHelper theMimeMessageHelper = new MimeMessageHelper(theMimeMessage, true);
 		theMimeMessageHelper.setTo(theEmail.getEmail());
 		theMimeMessageHelper.setFrom(this.sender);
 		theMimeMessageHelper.setSubject("V1LLSEC -- Alerta de novo evento próximo a você: " + theEvento.getNome());
 		theMimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));
-		theMimeMessageHelper.setText(htmlFromTemplateEvento(theEvento), true);
+		theMimeMessageHelper.setText(htmlFromTemplateEvento(theEvento, theProprietario), true);
 		return theMimeMessage;
 	}
 }
