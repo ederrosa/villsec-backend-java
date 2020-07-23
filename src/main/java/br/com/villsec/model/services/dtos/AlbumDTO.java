@@ -3,7 +3,7 @@ package br.com.villsec.model.services.dtos;
 import br.com.villsec.model.entities.domain.Album;
 import br.com.villsec.model.entities.domain.EntidadeDominio;
 
-public class AlbumDTO extends EntidadeDominio{
+public class AlbumDTO extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,14 +16,11 @@ public class AlbumDTO extends EntidadeDominio{
 	private String nome;
 
 	public AlbumDTO() {
-		
+
 	}
-	
+
 	public AlbumDTO(Album theAlbum) {
-		super(
-				theAlbum.getId(),
-				theAlbum.getVerificationCode(), 
-				theAlbum.getDtCriacao(),
+		super(theAlbum.getId(), theAlbum.getVerificationCode(), theAlbum.getDtCriacao(),
 				theAlbum.getDtUltimaAlteracao());
 		this.ano = theAlbum.getAno();
 		this.capaNome = theAlbum.getCapa().getNome();
@@ -88,5 +85,5 @@ public class AlbumDTO extends EntidadeDominio{
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}	
+	}
 }

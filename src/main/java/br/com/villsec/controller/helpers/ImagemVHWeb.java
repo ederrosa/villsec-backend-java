@@ -7,12 +7,12 @@ public class ImagemVHWeb {
 
 	public Imagem create(ImagemDTO objDTO) {
 
-		return new Imagem(null, objDTO.getDescricao(), null, null, objDTO.getTitulo());		
+		return new Imagem(null, objDTO.getDescricao(), null, null, objDTO.getTitulo());
 	}
 
 	public void update(Imagem theImagem, ImagemDTO objDTO) {
 
 		theImagem.setDescricao(objDTO.getDescricao());
-		theImagem.setTitulo(objDTO.getTitulo());		
+		theImagem.setTitulo(objDTO.getTitulo());
 	}
 }

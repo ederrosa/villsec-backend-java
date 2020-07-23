@@ -16,7 +16,7 @@ public interface IVideoRepository extends JpaRepository<Video, Long> {
 
 	@Transactional(readOnly = true)
 	List<Video> findAllByTheGaleria(Galeria theGaleria);
-	
+
 	@Transactional(readOnly = true)
 	Page<Video> findAllByTheGaleria(Galeria theGaleria, Pageable pageRequest);
 }

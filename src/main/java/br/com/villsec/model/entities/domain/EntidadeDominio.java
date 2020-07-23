@@ -45,7 +45,7 @@ public class EntidadeDominio implements Serializable {
 		if (dtCriacao == null) {
 			dtCriacao = new Date(System.currentTimeMillis());
 		}
-		if(verificationCode == null) {
+		if (verificationCode == null) {
 			verificationCode = new Random().nextLong();
 		}
 	}
@@ -57,7 +57,7 @@ public class EntidadeDominio implements Serializable {
 			this.dtCriacao = new Date(System.currentTimeMillis());
 		}
 	}
-	
+
 	public EntidadeDominio(Long id, Long verificationCode, Date dtCriacao, Date dtUltimaAlteracao) {
 		this.id = id;
 		this.verificationCode = verificationCode;

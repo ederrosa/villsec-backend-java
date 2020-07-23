@@ -15,7 +15,7 @@ import org.hibernate.annotations.DynamicInsert;
 public class Proprietario extends Pessoa {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Lob
 	@Column(columnDefinition = "BLOB")
 	private URI facebook;
@@ -31,14 +31,14 @@ public class Proprietario extends Pessoa {
 	private URI twitch;
 	@Lob
 	@Column(columnDefinition = "BLOB")
-	private URI twitter;	
+	private URI twitter;
 	@Lob
 	@Column(columnDefinition = "BLOB")
 	private URI youtube;
 
 	public Proprietario() {
 
-	}	
+	}
 
 	public Proprietario(Long id, Date dataNascimento, String genero, String nome, Boolean statusPessoa,
 			AutenticacaoSS theAutenticacaoSS, Endereco theEndereco, Email theEmail, Set<Telefone> theTelefones,
@@ -107,5 +107,5 @@ public class Proprietario extends Pessoa {
 
 	public void setYoutube(URI youtube) {
 		this.youtube = youtube;
-	}	
+	}
 }

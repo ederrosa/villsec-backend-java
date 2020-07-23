@@ -25,7 +25,7 @@ public class EventoVHWeb {
 				(objDTO.getTipoEvento() == null) ? null : TipoEvento.toEnum(Integer.parseInt(objDTO.getTipoEvento())),
 				new Endereco(null, objDTO.getBairro(), objDTO.getCep(), objDTO.getCidade(), objDTO.getEstado(),
 						objDTO.getLogradouro(), objDTO.getPais()));
-		if(objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
+		if (objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
 			theEvento.getTheEndereco().setGoogleMapsUrl(URI.create(objDTO.getGoogleMapsUrl()));
 		}
 		return theEvento;
@@ -48,7 +48,7 @@ public class EventoVHWeb {
 				objDTO.getCidade(), objDTO.getEstado(), objDTO.getLogradouro(), objDTO.getPais()));
 		theEvento.setTipoEvento(
 				(objDTO.getTipoEvento() == null) ? null : TipoEvento.toEnum(Integer.parseInt(objDTO.getTipoEvento())));
-		if(objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
+		if (objDTO.getGoogleMapsUrl() != null && !objDTO.getGoogleMapsUrl().isEmpty()) {
 			theEvento.getTheEndereco().setGoogleMapsUrl(URI.create(objDTO.getGoogleMapsUrl()));
 		}
 	}

@@ -6,28 +6,25 @@ import br.com.villsec.model.entities.domain.Imagem;
 public class ImagemDTO extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String arquivoNome;
 	private String arquivoUrl;
 	private String descricao;
 	private String titulo;
-	
+
 	public ImagemDTO() {
-		
+
 	}
 
 	public ImagemDTO(Imagem theImagem) {
-		super(
-				theImagem.getId(),
-				theImagem.getVerificationCode(), 
-				theImagem.getDtCriacao(),
+		super(theImagem.getId(), theImagem.getVerificationCode(), theImagem.getDtCriacao(),
 				theImagem.getDtUltimaAlteracao());
 		this.arquivoNome = theImagem.getTheArquivo().getNome();
 		this.arquivoUrl = theImagem.getTheArquivo().getUrl().toString();
 		this.descricao = theImagem.getDescricao();
-		this.titulo = theImagem.getTitulo(); 
+		this.titulo = theImagem.getTitulo();
 	}
-	
+
 	public String getArquivoNome() {
 		return arquivoNome;
 	}
@@ -58,6 +55,5 @@ public class ImagemDTO extends EntidadeDominio {
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
-	}	
+	}
 }
-

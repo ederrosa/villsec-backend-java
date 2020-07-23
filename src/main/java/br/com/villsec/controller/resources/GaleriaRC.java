@@ -31,8 +31,7 @@ public class GaleriaRC {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid GaleriaDTO objNewDTO) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theGaleriaServices.insert(new GaleriaVHWeb().create(objNewDTO)).getId())
-				.toUri();
+				.buildAndExpand(theGaleriaServices.insert(new GaleriaVHWeb().create(objNewDTO)).getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 

@@ -25,7 +25,7 @@ public class S3Service {
 	private String bucketName;
 
 	public URI uploadFile(MultipartFile multipartFile) {
-		
+
 		try {
 			String fileName = multipartFile.getOriginalFilename();
 			InputStream is = multipartFile.getInputStream();
@@ -37,7 +37,7 @@ public class S3Service {
 	}
 
 	public URI uploadFile(InputStream is, String fileName, String contentType) {
-		
+
 		try {
 			ObjectMetadata meta = new ObjectMetadata();
 			meta.setContentType(contentType);
@@ -53,5 +53,5 @@ public class S3Service {
 		if (this.s3client.doesObjectExist(this.bucketName, fileName))
 			this.s3client.deleteObject(this.bucketName, fileName);
 	}
-	
+
 }

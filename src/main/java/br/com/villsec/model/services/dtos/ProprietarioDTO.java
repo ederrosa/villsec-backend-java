@@ -77,10 +77,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	}
 
 	public ProprietarioDTO(Proprietario theProprietario) {
-		super(
-				theProprietario.getId(),
-				theProprietario.getVerificationCode(), 
-				theProprietario.getDtCriacao(),
+		super(theProprietario.getId(), theProprietario.getVerificationCode(), theProprietario.getDtCriacao(),
 				theProprietario.getDtUltimaAlteracao());
 		this.senha = theProprietario.getTheAutenticacaoSS().getSenha();
 		this.login = theProprietario.getTheAutenticacaoSS().getLogin();
@@ -94,7 +91,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		this.cidade = theProprietario.getTheEndereco().getCidade();
 		this.estado = theProprietario.getTheEndereco().getEstado();
 		this.pais = theProprietario.getTheEndereco().getPais();
-		if(theProprietario.getTheEndereco().getGoogleMapsUrl() != null) {
+		if (theProprietario.getTheEndereco().getGoogleMapsUrl() != null) {
 			this.googleMapsUrl = theProprietario.getTheEndereco().getGoogleMapsUrl().toString();
 		}
 		this.nome = theProprietario.getNome();
@@ -105,7 +102,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 		list.addAll(theProprietario.getTheTelefones());
 		this.numeroTelefone1 = list.get(0).getNumeroTelefone();
 		this.tipoTelefone1 = list.get(0).getTipoTelefone().getDescricao();
-		if(list.size() > 1) {
+		if (list.size() > 1) {
 			this.numeroTelefone2 = list.get(1).getNumeroTelefone();
 			this.tipoTelefone2 = list.get(1).getTipoTelefone().getDescricao();
 		}
@@ -213,7 +210,7 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	public void setPais(String pais) {
 		this.pais = pais;
 	}
-	
+
 	public String getGoogleMapsUrl() {
 		return googleMapsUrl;
 	}
@@ -341,6 +338,5 @@ public class ProprietarioDTO extends EntidadeDominio implements Serializable {
 	public void setYoutube(String youtube) {
 		this.youtube = youtube;
 	}
-	
-	
+
 }

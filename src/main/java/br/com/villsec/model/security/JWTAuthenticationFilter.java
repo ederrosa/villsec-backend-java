@@ -25,7 +25,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private JWTUtil jwtUtil;
 
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-		
+
 		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
@@ -44,16 +44,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) throws IOException, ServletException {
-		
+
 		String username = ((AutenticacaoSS) authentication.getPrincipal()).getUsername();
 		String token = this.jwtUtil.generateToken(username);
 		response.addHeader("Authorization", "Bearer " + token);
 		response.addHeader("access-control-expose-headers", "Authorization");
-		response.addHeader("UserType", String.valueOf(((AutenticacaoSS) authentication.getPrincipal()).getTipoUsuario().getCodigo()));
+		response.addHeader("UserType",
+				String.valueOf(((AutenticacaoSS) authentication.getPrincipal()).getTipoUsuario().getCodigo()));
 		response.addHeader("access-control-expose-headers", "UserType");
 		response.addHeader("UserMatricula", ((AutenticacaoSS) authentication.getPrincipal()).getMatricula().toString());
 		response.addHeader("access-control-expose-headers", "UserMatricula");
-		response.addHeader("UserUriImgPerfil", ((AutenticacaoSS) authentication.getPrincipal()).getUriImgPerfil().toString());
+		response.addHeader("UserUriImgPerfil",
+				((AutenticacaoSS) authentication.getPrincipal()).getUriImgPerfil().toString());
 		response.addHeader("access-control-expose-headers", "UserUriImgPerfil");
 	}
 
@@ -62,14 +64,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		@Override
 		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 				AuthenticationException exception) throws IOException, ServletException {
-			
+
 			response.setStatus(401);
 			response.setContentType("application/json");
 			response.getWriter().append(json());
 		}
 
 		private String json() {
-		
+
 			long date = new Date().getTime();
 			return "{\"timestamp\": " + date + ", " + "\"status\": 401, " + "\"error\": \"Não autorizado\", "
 					+ "\"message\": \"Login ou senha inválidos\", " + "\"path\": \"/login\"}";

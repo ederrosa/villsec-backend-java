@@ -56,8 +56,9 @@ public class VideoServices {
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			String fileName = prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
-					this.theVideoUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName,
+					this.theS3Service.uploadFile(this.theVideoUtilities.getInputStream(theMultipartFile), fileName,
+							theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
 		return this.theIVideoRepository.save(theEntidade);
@@ -89,8 +90,9 @@ public class VideoServices {
 			this.theS3Service.deleteFile(theEntidade.getTheArquivo().getNome());
 			String fileName = prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
-					this.theVideoUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName,
+					this.theS3Service.uploadFile(this.theVideoUtilities.getInputStream(theMultipartFile), fileName,
+							theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
 		return this.theIVideoRepository.save(theEntidade);

@@ -33,8 +33,8 @@ public class Musica extends EntidadeDominio {
 
 	}
 
-	public Musica(Long id, String autor, Integer bpm, String coautor, Boolean copyright, String duracao,
-			Integer faixa, String idioma, String nome, Arquivo theArquivo, Album theAlbum) {
+	public Musica(Long id, String autor, Integer bpm, String coautor, Boolean copyright, String duracao, Integer faixa,
+			String idioma, String nome, Arquivo theArquivo, Album theAlbum) {
 		super(id);
 		this.autor = autor;
 		this.nome = nome;
@@ -126,5 +126,5 @@ public class Musica extends EntidadeDominio {
 
 	public void setTheAlbum(Album theAlbum) {
 		this.theAlbum = theAlbum;
-	}	
+	}
 }

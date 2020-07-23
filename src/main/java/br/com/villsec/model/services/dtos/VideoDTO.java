@@ -3,7 +3,6 @@ package br.com.villsec.model.services.dtos;
 import br.com.villsec.model.entities.domain.EntidadeDominio;
 import br.com.villsec.model.entities.domain.Video;
 
-
 public class VideoDTO extends EntidadeDominio {
 
 	private static final long serialVersionUID = 1L;
@@ -13,24 +12,21 @@ public class VideoDTO extends EntidadeDominio {
 	private String descricao;
 	private String embed;
 	private String titulo;
-		
+
 	public VideoDTO() {
-		
+
 	}
 
 	public VideoDTO(Video theVideo) {
-		super(
-				theVideo.getId(),
-				theVideo.getVerificationCode(), 
-				theVideo.getDtCriacao(),
+		super(theVideo.getId(), theVideo.getVerificationCode(), theVideo.getDtCriacao(),
 				theVideo.getDtUltimaAlteracao());
 		this.descricao = theVideo.getDescricao();
-		if(theVideo.getTheArquivo() !=  null) {
+		if (theVideo.getTheArquivo() != null) {
 			this.arquivoNome = theVideo.getTheArquivo().getNome();
 			this.arquivoUrl = theVideo.getTheArquivo().getUrl().toString();
-		}		
+		}
 		this.embed = theVideo.getEmbed();
-		this.titulo = theVideo.getTitulo();		
+		this.titulo = theVideo.getTitulo();
 	}
 
 	public String getArquivoNome() {
@@ -71,5 +67,5 @@ public class VideoDTO extends EntidadeDominio {
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
-	}	
+	}
 }

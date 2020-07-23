@@ -56,8 +56,9 @@ public class ImagemServices {
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			String fileName = this.prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
-					this.theImageUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName,
+					this.theS3Service.uploadFile(this.theImageUtilities.getInputStream(theMultipartFile), fileName,
+							theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
 		return this.theIImagemRepository.save(theEntidade);
@@ -89,8 +90,9 @@ public class ImagemServices {
 			this.theS3Service.deleteFile(theEntidade.getTheArquivo().getNome());
 			String fileName = this.prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
-					this.theImageUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName,
+					this.theS3Service.uploadFile(this.theImageUtilities.getInputStream(theMultipartFile), fileName,
+							theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
 		return this.theIImagemRepository.save(theEntidade);

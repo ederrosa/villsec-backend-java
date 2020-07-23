@@ -19,7 +19,7 @@ public interface ISeguidorRepository extends JpaRepository<Seguidor, Long> {
 
 	@Transactional(readOnly = true)
 	Seguidor findByTheAutenticacaoSS(AutenticacaoSS theAutenticacaoSS);
-	
+
 	@Transactional(readOnly = true)
 	List<Seguidor> findAllByTheEnderecoCidade(String cidade);
 

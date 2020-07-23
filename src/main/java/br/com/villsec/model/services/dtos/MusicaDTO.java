@@ -15,18 +15,15 @@ public class MusicaDTO extends EntidadeDominio {
 	private String coautor;
 	private Boolean copyright;
 	private String duracao;
-	private String faixa;	
-	private String idioma;	
-	
+	private String faixa;
+	private String idioma;
+
 	public MusicaDTO() {
-		
+
 	}
-	
+
 	public MusicaDTO(Musica theMusica) {
-		super(
-				theMusica.getId(),
-				theMusica.getVerificationCode(), 
-				theMusica.getDtCriacao(),
+		super(theMusica.getId(), theMusica.getVerificationCode(), theMusica.getDtCriacao(),
 				theMusica.getDtUltimaAlteracao());
 		this.nome = theMusica.getNome();
 		this.bpm = theMusica.getBpm().toString();
@@ -118,5 +115,5 @@ public class MusicaDTO extends EntidadeDominio {
 
 	public void setIdioma(String idioma) {
 		this.idioma = idioma;
-	}	
+	}
 }

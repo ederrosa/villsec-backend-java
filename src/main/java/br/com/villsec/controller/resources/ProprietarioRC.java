@@ -33,8 +33,8 @@ public class ProprietarioRC {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid ProprietarioDTO objNewDTO,
 			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theProprietarioServices.insert(new ProprietarioVHWeb().create(objNewDTO), theMultipartFile).getId())
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
+				theProprietarioServices.insert(new ProprietarioVHWeb().create(objNewDTO), theMultipartFile).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -46,7 +46,8 @@ public class ProprietarioRC {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Page<ProprietarioDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ProprietarioDTO>> findPage(
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {

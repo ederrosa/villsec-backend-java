@@ -24,13 +24,13 @@ public class GaleriaServices {
 
 	@Autowired
 	private IGaleriaRepository theGaleriaRepository;
-	
+
 	@Autowired
 	private ImagemServices theImagemServices;
-	
+
 	@Autowired
 	private VideoServices theVideoServices;
-	
+
 	@Transactional
 	public Galeria insert(Galeria theEntidade) {
 
@@ -68,12 +68,12 @@ public class GaleriaServices {
 				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		try {			
-			for(Imagem theImagem : this.theImagemServices.findAll(this.find(id))) {
-				this.theImagemServices.delete(theImagem.getId());			
+		try {
+			for (Imagem theImagem : this.theImagemServices.findAll(this.find(id))) {
+				this.theImagemServices.delete(theImagem.getId());
 			}
-			for(Video theMusica : this.theVideoServices.findAll(this.find(id))) {
-				this.theVideoServices.delete(theMusica.getId());			
+			for (Video theMusica : this.theVideoServices.findAll(this.find(id))) {
+				this.theVideoServices.delete(theMusica.getId());
 			}
 			this.theGaleriaRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {

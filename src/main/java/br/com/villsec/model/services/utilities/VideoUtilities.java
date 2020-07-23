@@ -16,7 +16,7 @@ public class VideoUtilities {
 
 	@Value("${video.size}")
 	private Long size;
-	
+
 	public InputStream getInputStream(MultipartFile uploadedFile) {
 
 		String theExtension = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());

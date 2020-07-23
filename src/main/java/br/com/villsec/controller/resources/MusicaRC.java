@@ -34,8 +34,8 @@ public class MusicaRC {
 	public ResponseEntity<Void> insert(@Valid MusicaDTO objNewDTO,
 			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile,
 			@RequestParam(value = "albumID") String theAlbum) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theMusicaServices.insert(new MusicaVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theAlbum)).getId())
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theMusicaServices
+				.insert(new MusicaVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theAlbum)).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}

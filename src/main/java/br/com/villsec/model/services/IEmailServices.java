@@ -10,9 +10,9 @@ import br.com.villsec.model.entities.domain.Proprietario;
 public interface IEmailServices {
 
 	void sendAlertaEventoHtmlEmail(Evento theEvento, Email theEmail, Proprietario theProprietario);
-	
+
 	void sendHtmlEmail(MimeMessage msg);
-	
+
 	void sendNewPasswordHtmlEmail(AutenticacaoSS cliente, String newPass);
-		
+
 }

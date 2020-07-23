@@ -13,8 +13,7 @@ import br.com.villsec.model.services.dtos.ProprietarioDTO;
 import br.com.villsec.model.services.exceptions.FieldMessage;
 import br.com.villsec.model.services.validations.annotations.ProprietarioAnnotation;
 
-
-public class ProprietarioValidator implements ConstraintValidator< ProprietarioAnnotation, ProprietarioDTO> {
+public class ProprietarioValidator implements ConstraintValidator<ProprietarioAnnotation, ProprietarioDTO> {
 
 	@Autowired
 	private IPessoaRepository theIPessoaRepository;
@@ -29,8 +28,8 @@ public class ProprietarioValidator implements ConstraintValidator< ProprietarioA
 		List<FieldMessage> list = new ArrayList<>();
 
 		if (this.theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()) != null) {
-			if (objDto.getId() == null
-					|| !this.theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()).getId().equals(objDto.getId())) {
+			if (objDto.getId() == null || !this.theIPessoaRepository.findByTheEmailEmail(objDto.getEmail()).getId()
+					.equals(objDto.getId())) {
 				list.add(new FieldMessage("Email", "Email já existente e não pertece ao usuário em questão!"));
 			}
 		}

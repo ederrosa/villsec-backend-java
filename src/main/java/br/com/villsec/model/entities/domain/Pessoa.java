@@ -31,10 +31,10 @@ public abstract class Pessoa extends EntidadeDominio {
 	private static final long serialVersionUID = 1L;
 
 	private Date dataNascimento;
-	
+
 	@Column(columnDefinition = "VARCHAR(20)")
 	private String genero;
-	
+
 	@Column(columnDefinition = "VARCHAR(100)")
 	private String nome;
 
@@ -45,7 +45,7 @@ public abstract class Pessoa extends EntidadeDominio {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "AUTENTICACAOSS_ID")
 	private AutenticacaoSS theAutenticacaoSS;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ENDERECO_ID")
 	private Endereco theEndereco;

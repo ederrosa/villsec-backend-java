@@ -14,7 +14,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private IAutenticacaoSSRepository theRepository;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 		AutenticacaoSS theAutenticacaoSS = this.theRepository.findByLogin(login);

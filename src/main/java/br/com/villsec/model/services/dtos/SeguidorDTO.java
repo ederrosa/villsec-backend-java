@@ -69,10 +69,7 @@ public class SeguidorDTO extends EntidadeDominio implements Serializable {
 	}
 
 	public SeguidorDTO(Seguidor theSeguidor) {
-		super(
-				theSeguidor.getId(),
-				theSeguidor.getVerificationCode(), 
-				theSeguidor.getDtCriacao(),
+		super(theSeguidor.getId(), theSeguidor.getVerificationCode(), theSeguidor.getDtCriacao(),
 				theSeguidor.getDtUltimaAlteracao());
 		this.senha = theSeguidor.getTheAutenticacaoSS().getSenha();
 		this.login = theSeguidor.getTheAutenticacaoSS().getLogin();
@@ -94,10 +91,10 @@ public class SeguidorDTO extends EntidadeDominio implements Serializable {
 		list.addAll(theSeguidor.getTheTelefones());
 		this.numeroTelefone1 = list.get(0).getNumeroTelefone();
 		this.tipoTelefone1 = list.get(0).getTipoTelefone().getDescricao();
-		if(list.size() > 1) {
+		if (list.size() > 1) {
 			this.numeroTelefone2 = list.get(1).getNumeroTelefone();
 			this.tipoTelefone2 = list.get(1).getTipoTelefone().getDescricao();
-		}		
+		}
 	}
 
 	public String getSenha() {

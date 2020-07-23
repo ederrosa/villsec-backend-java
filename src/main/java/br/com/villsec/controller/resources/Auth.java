@@ -18,7 +18,7 @@ import br.com.villsec.model.services.dtos.EmailDTO;
 @RestController
 @RequestMapping(value = "/auth")
 public class Auth {
-	
+
 	@Autowired
 	private JWTUtil jwtUtil;
 

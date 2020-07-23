@@ -34,7 +34,8 @@ public class EventoRC {
 	public ResponseEntity<Void> insert(@Valid EventoDTO objNewDTO,
 			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(this.theEventoServices.insert(new EventoVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.buildAndExpand(
+						this.theEventoServices.insert(new EventoVHWeb().create(objNewDTO), theMultipartFile).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -65,14 +66,14 @@ public class EventoRC {
 		theEvento = this.theEventoServices.update(theEvento, theMultipartFile);
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		this.theEventoServices.delete(id);
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/alertas/{id}", method = RequestMethod.OPTIONS)
 	public ResponseEntity<Void> enviarAlerta(@PathVariable Long id) {

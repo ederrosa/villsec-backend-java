@@ -29,16 +29,16 @@ public class MusicaServices {
 
 	@Autowired
 	private IMusicaRepository theMusicaRepository;
-	
+
 	@Autowired
 	private AlbumServices theAlbumServices;
-	
+
 	@Autowired
 	private S3Service theS3Service;
-	
+
 	@Autowired
 	private AudioUtilities theAudioUtilities;
-	
+
 	@Value("${prefix.album.profile}")
 	private String prefix;
 
@@ -66,8 +66,8 @@ public class MusicaServices {
 		return theEntidade.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Musica.class.getSimpleName()));
 	}
-	
-	public List<Musica> findAll(Album theAlbum){
+
+	public List<Musica> findAll(Album theAlbum) {
 		return this.theMusicaRepository.findAllByTheAlbum(theAlbum);
 	}
 
@@ -87,8 +87,9 @@ public class MusicaServices {
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			String fileName = this.prefix + theEntidade.getTheAlbum().getNome() + "/" + theEntidade.getNome() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-			Arquivo theFile = new Arquivo(null, fileName, this.theS3Service.uploadFile(
-					this.theAudioUtilities.getInputStream(theMultipartFile), fileName, theMultipartFile.getContentType()));
+			Arquivo theFile = new Arquivo(null, fileName,
+					this.theS3Service.uploadFile(this.theAudioUtilities.getInputStream(theMultipartFile), fileName,
+							theMultipartFile.getContentType()));
 			theEntidade.setTheArquivo(theFile);
 		}
 		return this.theMusicaRepository.save(theEntidade);

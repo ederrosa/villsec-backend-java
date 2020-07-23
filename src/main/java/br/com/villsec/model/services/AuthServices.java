@@ -13,14 +13,14 @@ import br.com.villsec.model.services.utilities.CodeUtilities;
 public class AuthServices {
 
 	@Autowired
-	private IAutenticacaoSSRepository theIAutenticacaoSSRepository; 
-	
+	private IAutenticacaoSSRepository theIAutenticacaoSSRepository;
+
 	@Autowired
 	private BCryptPasswordEncoder theBCryptPasswordEncoder;
-	
+
 	@Autowired
 	private IEmailServices theIEmailServices;
-	
+
 	public void sendNewPassword(String email) {
 
 		AutenticacaoSS theAutenticacaoSS = this.theIAutenticacaoSSRepository.findByLogin(email);
@@ -30,6 +30,6 @@ public class AuthServices {
 		String newPass = new CodeUtilities().newPassword();
 		this.theIEmailServices.sendNewPasswordHtmlEmail(theAutenticacaoSS, newPass);
 		theAutenticacaoSS.setSenha(this.theBCryptPasswordEncoder.encode(newPass));
-	    this.theIAutenticacaoSSRepository.save(theAutenticacaoSS);		
+		this.theIAutenticacaoSSRepository.save(theAutenticacaoSS);
 	}
 }

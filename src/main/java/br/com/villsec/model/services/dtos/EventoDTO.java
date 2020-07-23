@@ -15,7 +15,7 @@ public class EventoDTO extends EntidadeDominio {
 	private String classificacao;
 	private String descricao;
 	private String diaInicio;
-	private String diaTermino;	
+	private String diaTermino;
 	private String folderName;
 	private String folderUrl;
 	private String googleMapsUrl;
@@ -42,16 +42,13 @@ public class EventoDTO extends EntidadeDominio {
 	@NotEmpty(message = "Preenchimento obrigatório")
 	@Length(min = 1, max = 50, message = "O tamanho deve ser entre 1 e 50 caracteres")
 	private String pais;
-	
+
 	public EventoDTO() {
-		
+
 	}
 
 	public EventoDTO(Evento theEvento) {
-		super(
-				theEvento.getId(),
-				theEvento.getVerificationCode(), 
-				theEvento.getDtCriacao(),
+		super(theEvento.getId(), theEvento.getVerificationCode(), theEvento.getDtCriacao(),
 				theEvento.getDtUltimaAlteracao());
 		this.alerta = theEvento.isAlerta();
 		this.classificacao = theEvento.getClassificacao();
@@ -62,9 +59,9 @@ public class EventoDTO extends EntidadeDominio {
 		this.folderUrl = theEvento.getFolder().getUrl().toString();
 		this.horaInicio = theEvento.getHoraInicio();
 		this.horaTermino = theEvento.getHoraTermino();
-		if(theEvento.getIngressoUrl() != null) {
+		if (theEvento.getIngressoUrl() != null) {
 			this.ingressoUrl = theEvento.getIngressoUrl().toString();
-		}		
+		}
 		this.nome = theEvento.getNome();
 		this.tipoEvento = theEvento.getTipoEvento().getDescricao();
 		this.logradouro = theEvento.getTheEndereco().getLogradouro();
@@ -73,11 +70,11 @@ public class EventoDTO extends EntidadeDominio {
 		this.cidade = theEvento.getTheEndereco().getCidade();
 		this.estado = theEvento.getTheEndereco().getEstado();
 		this.pais = theEvento.getTheEndereco().getPais();
-		if(theEvento.getTheEndereco().getGoogleMapsUrl() != null) {
+		if (theEvento.getTheEndereco().getGoogleMapsUrl() != null) {
 			this.googleMapsUrl = theEvento.getTheEndereco().getGoogleMapsUrl().toString();
 		}
-	}	
-	
+	}
+
 	public boolean isAlerta() {
 		return alerta;
 	}
@@ -93,7 +90,7 @@ public class EventoDTO extends EntidadeDominio {
 	public void setClassificacao(String classificacao) {
 		this.classificacao = classificacao;
 	}
-	
+
 	public String getDescricao() {
 		return descricao;
 	}
@@ -132,8 +129,8 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setFolderUrl(String folderUrl) {
 		this.folderUrl = folderUrl;
-	}	
-	
+	}
+
 	public String getGoogleMapsUrl() {
 		return googleMapsUrl;
 	}
@@ -156,8 +153,8 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setHoraTermino(String horaTermino) {
 		this.horaTermino = horaTermino;
-	}	
-	
+	}
+
 	public String getIngressoUrl() {
 		return ingressoUrl;
 	}
@@ -228,5 +225,5 @@ public class EventoDTO extends EntidadeDominio {
 
 	public void setPais(String pais) {
 		this.pais = pais;
-	}	
+	}
 }

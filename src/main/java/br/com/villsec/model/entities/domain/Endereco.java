@@ -72,7 +72,7 @@ public class Endereco extends EntidadeDominio {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	
+
 	public URI getGoogleMapsUrl() {
 		return googleMapsUrl;
 	}

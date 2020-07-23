@@ -30,7 +30,7 @@ public class AlbumServices {
 
 	@Autowired
 	private IAlbumRepository theAlbumRepository;
-	
+
 	@Autowired
 	private MusicaServices theMusicaServices;
 
@@ -113,8 +113,8 @@ public class AlbumServices {
 			if (find(id).getCapa() != null) {
 				this.theS3Service.deleteFile(find(id).getCapa().getNome());
 			}
-			for(Musica theMusica : this.theMusicaServices.findAll(this.find(id))) {
-				this.theMusicaServices.delete(theMusica.getId());			
+			for (Musica theMusica : this.theMusicaServices.findAll(this.find(id))) {
+				this.theMusicaServices.delete(theMusica.getId());
 			}
 			this.theAlbumRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {

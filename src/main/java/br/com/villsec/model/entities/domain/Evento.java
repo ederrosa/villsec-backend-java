@@ -43,8 +43,9 @@ public class Evento extends EntidadeDominio {
 
 	}
 
-	public Evento(Long id, boolean alerta, String classificacao, Date diaInicio, Date diaTermino, String descricao, Arquivo folder,
-			String horaInicio, String horaTermino, URI ingressoUrl, String nome, TipoEvento tipoEvento, Endereco theEndereco) {
+	public Evento(Long id, boolean alerta, String classificacao, Date diaInicio, Date diaTermino, String descricao,
+			Arquivo folder, String horaInicio, String horaTermino, URI ingressoUrl, String nome, TipoEvento tipoEvento,
+			Endereco theEndereco) {
 		super(id);
 		this.alerta = alerta;
 		this.classificacao = classificacao;
@@ -59,7 +60,7 @@ public class Evento extends EntidadeDominio {
 		this.tipoEvento = (tipoEvento == null) ? null : tipoEvento.getCodigo();
 		this.theEndereco = theEndereco;
 	}
-	
+
 	public boolean isAlerta() {
 		return alerta;
 	}
@@ -123,7 +124,7 @@ public class Evento extends EntidadeDominio {
 	public void setHoraTermino(String horaTermino) {
 		this.horaTermino = horaTermino;
 	}
-	
+
 	public URI getIngressoUrl() {
 		return ingressoUrl;
 	}

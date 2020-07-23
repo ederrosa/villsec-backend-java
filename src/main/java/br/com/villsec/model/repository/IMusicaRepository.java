@@ -16,7 +16,7 @@ public interface IMusicaRepository extends JpaRepository<Musica, Long> {
 
 	@Transactional(readOnly = true)
 	List<Musica> findAllByTheAlbum(Album theAlbum);
-	
+
 	@Transactional(readOnly = true)
 	Page<Musica> findAllByTheAlbum(Album theAlbum, Pageable pageRequest);
 }

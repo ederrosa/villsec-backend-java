@@ -5,11 +5,11 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 
-public class SmtpEmailServices extends AbstractEmailServices{
+public class SmtpEmailServices extends AbstractEmailServices {
 
 	@Autowired
 	private JavaMailSender theJavaMailSender;
-	
+
 	@Override
 	public void sendHtmlEmail(MimeMessage msg) {
 		this.theJavaMailSender.send(msg);

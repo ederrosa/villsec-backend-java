@@ -59,8 +59,8 @@ public class ProprietarioServices {
 			jpgImage = this.theImageUtilities.cropSquare(jpgImage);
 			jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
 			theProprietario.getTheAutenticacaoSS()
-					.setNomeImgPerfil(this.prefix + theProprietario.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
-							+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+					.setNomeImgPerfil(this.prefix + theProprietario.getTheAutenticacaoSS().getMatricula()
+							+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
 			theProprietario.getTheAutenticacaoSS()
 					.setUriImgPerfil(this.theS3Service.uploadFile(
 							this.theImageUtilities.getInputStream(jpgImage,
@@ -95,8 +95,8 @@ public class ProprietarioServices {
 				jpgImage = this.theImageUtilities.cropSquare(jpgImage);
 				jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
 				theProprietario.getTheAutenticacaoSS()
-						.setNomeImgPerfil(this.prefix + theProprietario.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
-								+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+						.setNomeImgPerfil(this.prefix + theProprietario.getTheAutenticacaoSS().getMatricula()
+								+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
 				theProprietario.getTheAutenticacaoSS()
 						.setUriImgPerfil(
 								this.theS3Service

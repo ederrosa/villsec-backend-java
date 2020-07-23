@@ -12,10 +12,10 @@ import br.com.villsec.model.entities.domain.Galeria;
 import br.com.villsec.model.entities.domain.Imagem;
 
 @Repository
-public interface IImagemRepository  extends JpaRepository<Imagem, Long>{
+public interface IImagemRepository extends JpaRepository<Imagem, Long> {
 
 	List<Imagem> findAllByTheGaleria(Galeria theGaleria);
-	
+
 	@Transactional(readOnly = true)
 	Page<Imagem> findAllByTheGaleria(Galeria theGaleria, Pageable pageRequest);
 }

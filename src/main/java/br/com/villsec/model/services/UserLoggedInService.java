@@ -34,9 +34,9 @@ public class UserLoggedInService {
 		}
 		return this.theIPessoaRepository.findByTheAutenticacaoSS(authenticated());
 	}
-	
+
 	public Boolean IsThereMatricula(String matricula) {
-		return (this.theIAutenticacaoSSRepository.findByMatricula(matricula) == null) ? false : true;		
+		return (this.theIAutenticacaoSSRepository.findByMatricula(matricula) == null) ? false : true;
 	}
 
 }

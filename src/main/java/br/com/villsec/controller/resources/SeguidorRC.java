@@ -33,7 +33,8 @@ public class SeguidorRC {
 	public ResponseEntity<Void> insert(@Valid SeguidorDTO objNewDTO,
 			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theSeguidorServices.insert(new SeguidorVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.buildAndExpand(
+						theSeguidorServices.insert(new SeguidorVHWeb().create(objNewDTO), theMultipartFile).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}

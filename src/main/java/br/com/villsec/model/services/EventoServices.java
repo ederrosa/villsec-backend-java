@@ -37,13 +37,13 @@ public class EventoServices {
 
 	@Autowired
 	private SeguidorServices theSeguidoServices;
-	
+
 	@Autowired
 	private ProprietarioServices theProprietarioServices;
 
 	@Autowired
 	private IEmailServices theIEmailServices;
-	
+
 	@Autowired
 	private ImageUtilities theImageUtilities;
 
@@ -52,7 +52,7 @@ public class EventoServices {
 
 	@Value("${image.size}")
 	private Integer size;
-	
+
 	@Value("${default.principal}")
 	private Long proprietarioId;
 
@@ -131,14 +131,16 @@ public class EventoServices {
 			throw new AuthorizationException("Acesso negado");
 		}
 		Evento theEvento = this.find(id);
-		if(theEvento.isAlerta()) {
-			throw new AuthorizationException("Acesso negado, alertas ja foram enviados anteriormente para este evento!!");
-		}		
+		if (theEvento.isAlerta()) {
+			throw new AuthorizationException(
+					"Acesso negado, alertas ja foram enviados anteriormente para este evento!!");
+		}
 		Proprietario theProprietario = this.theProprietarioServices.find(this.proprietarioId);
-		List<Seguidor> theSeguidorList = this.theSeguidoServices.findAllByCidade(theEvento.getTheEndereco().getCidade());
-		for(Seguidor theSeguidor : theSeguidorList) {
+		List<Seguidor> theSeguidorList = this.theSeguidoServices
+				.findAllByCidade(theEvento.getTheEndereco().getCidade());
+		for (Seguidor theSeguidor : theSeguidorList) {
 			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail(), theProprietario);
-		}	
+		}
 		theEvento.setAlerta(true);
 		this.theEventoRepository.save(theEvento);
 	}
