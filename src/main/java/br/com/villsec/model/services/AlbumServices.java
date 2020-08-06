@@ -43,7 +43,7 @@ public class AlbumServices {
 	@Value("${prefix.album.profile}")
 	private String prefix;
 
-	@Value("${image.size}")
+	@Value("${image.profile.size}")
 	private Integer size;
 
 	@Transactional

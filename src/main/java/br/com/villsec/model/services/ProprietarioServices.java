@@ -48,6 +48,9 @@ public class ProprietarioServices {
 	@Value("${image.profile.size}")
 	private Integer size;
 
+	@Value("${default.principal}")
+	private Long principalID;
+	
 	@Transactional
 	public Proprietario insert(Proprietario theProprietario, MultipartFile theMultipartFile) {
 
@@ -82,14 +85,29 @@ public class ProprietarioServices {
 
 	public Page<Proprietario> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return this.theIProprietarioRepository.findAll(pageRequest);
+		if (UserLoggedInService.authenticated() != null) {
+			switch (UserLoggedInService.authenticated().getTipoUsuario()) {
+			case PROPRIETARIO:
+				return this.theIProprietarioRepository.findAllByTheAutenticacaoSS(UserLoggedInService.authenticated(),
+						pageRequest);
+			case ADMINISTRADOR:
+				return this.theIProprietarioRepository.findAll(pageRequest);
+			case SEGUIDOR:
+				return this.theIProprietarioRepository.findAllByTheAutenticacaoSS(this.find(principalID).getTheAutenticacaoSS(),
+						pageRequest);
+			default:
+				throw new AuthorizationException("Acesso negado! - Você não possui permissão para executar esta ação!");
+			}
+		} else {
+			throw new AuthorizationException("Acesso negado! - Você não possui permissão para executar esta ação!");
+		}
 	}
 
 	public Proprietario update(Proprietario theProprietario, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() != null
 				&& this.theUserLoggedInService.userLoggedIn().getId() == theProprietario.getId()
-				|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
+				|| UserLoggedInService.authenticated() != null && UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 			if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 				BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
 				jpgImage = this.theImageUtilities.cropSquare(jpgImage);
@@ -105,6 +123,10 @@ public class ProprietarioServices {
 														FilenameUtils
 																.getExtension(theMultipartFile.getOriginalFilename())),
 												theProprietario.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
+			}
+			if (theProprietario.getTheAutenticacaoSS().getSenha().length() < 21) {
+				theProprietario.getTheAutenticacaoSS()
+						.setSenha(this.theBCryptPasswordEncoder.encode(theProprietario.getTheAutenticacaoSS().getSenha()));
 			}
 			return this.theIProprietarioRepository.save(theProprietario);
 		} else {

@@ -23,7 +23,7 @@ public class SeguidorDTO extends EntidadeDominio implements Serializable {
 	private String senha;
 	private String login;
 	private String matricula;
-	private String uriImgPerfil;
+	private String urlImgPerfil;
 	private String tipoUsuario;
 	@NotEmpty(message = "Preenchimento obrigatório")
 	@Length(max = 120, message = "O tamanho deve ser no máximo 120 caracteres")
@@ -74,7 +74,7 @@ public class SeguidorDTO extends EntidadeDominio implements Serializable {
 		this.senha = theSeguidor.getTheAutenticacaoSS().getSenha();
 		this.login = theSeguidor.getTheAutenticacaoSS().getLogin();
 		this.matricula = theSeguidor.getTheAutenticacaoSS().getMatricula();
-		this.uriImgPerfil = theSeguidor.getTheAutenticacaoSS().getUriImgPerfil().toString();
+		this.urlImgPerfil = theSeguidor.getTheAutenticacaoSS().getUriImgPerfil().toString();
 		this.tipoUsuario = theSeguidor.getTheAutenticacaoSS().getTipoUsuario().getDescricao();
 		this.email = theSeguidor.getTheEmail().getEmail();
 		this.logradouro = theSeguidor.getTheEndereco().getLogradouro();
@@ -121,12 +121,12 @@ public class SeguidorDTO extends EntidadeDominio implements Serializable {
 		this.matricula = matricula;
 	}
 
-	public String getUriImgPerfil() {
-		return uriImgPerfil;
+	public String getUrlImgPerfil() {
+		return urlImgPerfil;
 	}
 
-	public void setUriImgPerfil(String uriImgPerfil) {
-		this.uriImgPerfil = uriImgPerfil;
+	public void setUriImgPerfil(String urlImgPerfil) {
+		this.urlImgPerfil = urlImgPerfil;
 	}
 
 	public String getTipoUsuario() {

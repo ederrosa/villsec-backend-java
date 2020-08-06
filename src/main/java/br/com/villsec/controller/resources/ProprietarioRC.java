@@ -45,6 +45,7 @@ public class ProprietarioRC {
 		return ResponseEntity.ok().body(obj);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Page<ProprietarioDTO>> findPage(
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
