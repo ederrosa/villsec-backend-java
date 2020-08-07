@@ -50,7 +50,7 @@ public class EventoServices {
 	@Value("${prefix.evento.profile}")
 	private String prefix;
 
-	@Value("${image.size}")
+	@Value("${image.profile.size}")
 	private Integer size;
 
 	@Value("${default.principal}")

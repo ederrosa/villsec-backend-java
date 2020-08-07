@@ -53,7 +53,6 @@ public class ProprietarioServices {
 	
 	@Transactional
 	public Proprietario insert(Proprietario theProprietario, MultipartFile theMultipartFile) {
-
 		if (UserLoggedInService.authenticated() != null
 				&& UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
 			theProprietario.getTheAutenticacaoSS()
