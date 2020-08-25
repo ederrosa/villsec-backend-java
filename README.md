@@ -1,6 +1,6 @@
 <h1 align="center">V1LLSEC - SERVER</h1>
 
-![V1LLSEC](https://github.com/ederrosa/villsec-frontend-angular/blob/master/src/assets/images/camada1.png)
+![V1LLSEC](https://github.com/ederrosa/villsec-backend-java/blob/master/src/main/resources/assets/img/camada1.png)
 
 <h2 align="left">Descrição do Projeto</h2>
 <p align="justify">Esta aplicação JAVA tem como objetivo servir o Fontend-V1LLSEC de dados, serviços e segurança necessários para o funcionamento pleno. A aplicação como um todo busca promover a interação entre o DJ V1llsec e seus seguidores, divulgação de músicas, vídeos, fotos e datas de eventos, bem como marketing profissional do DJ.</p>
