@@ -143,6 +143,6 @@ $ cd villsec-backend-java
 Desenvolvido por Eder Rosa 👋🏽 Entre em contato!
 
 [![Badge](https://img.shields.io/static/v1?label=GitHub&message=Eder_Rosa&style=for-the-badge&logo=GITHUB)](https://github.com/ederrosa)
-[![Badge](https://img.shields.io/static/v1?label=GitHub&message=Eder_Rosa&color=000000&labelColor=0e76a8&style=for-the-badge&logo=LINKEDIN)](https://www.linkedin.com/in/eder-xavier-de-souza-rosa-370a4b74/)
+[![Badge](https://img.shields.io/static/v1?label=LINKEDIN&message=Eder_Rosa&color=000000&labelColor=0e76a8&style=for-the-badge&logo=LINKEDIN)](https://www.linkedin.com/in/eder-xavier-de-souza-rosa-370a4b74/)
 ![Badge](https://img.shields.io/static/v1?label=Hotmail&message=eder-x@hotmail.com&&color=000000&labelColor=00A4EF&style=for-the-badge)
 ![Badge](https://img.shields.io/static/v1?label=Outlook&message=eder.rosa01@fatec.sp.gov.br&&color=000000&labelColor=FFB900&style=for-the-badge)
