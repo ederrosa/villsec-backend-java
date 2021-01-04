@@ -30,16 +30,13 @@ public class MusicaRC {
 	private MusicaServices theMusicaServices;
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid MusicaDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile,
-			@RequestParam(value = "albumID") String theAlbum) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theMusicaServices
-				.insert(new MusicaVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theAlbum)).getId())
-				.toUri();
-		return ResponseEntity.created(uri).build();
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		find(id);
+		theMusicaServices.delete(id);
+		return ResponseEntity.noContent().build();
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<MusicaDTO> find(@PathVariable Long id) {
 		MusicaDTO obj = new MusicaDTO(theMusicaServices.find(id));
@@ -56,6 +53,19 @@ public class MusicaRC {
 		Page<MusicaDTO> listDTO = list.map(obj -> new MusicaDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
+	
+	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid MusicaDTO objNewDTO,
+			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile,
+			@RequestParam(value = "albumID") String theAlbum) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theMusicaServices
+				.insert(new MusicaVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theAlbum)).getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
+	}
+
+	
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -66,13 +76,5 @@ public class MusicaRC {
 		new MusicaVHWeb().update(theMusica, objDTO);
 		theMusica = theMusicaServices.update(theMusica, theMultipartFile);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		find(id);
-		theMusicaServices.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+	}	
 }

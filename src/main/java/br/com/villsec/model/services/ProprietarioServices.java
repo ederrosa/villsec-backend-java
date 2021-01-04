@@ -51,30 +51,23 @@ public class ProprietarioServices {
 	@Value("${default.principal}")
 	private Long principalID;
 	
-	@Transactional
-	public Proprietario insert(Proprietario theProprietario, MultipartFile theMultipartFile) {
-		if (UserLoggedInService.authenticated() != null
-				&& UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
-			theProprietario.getTheAutenticacaoSS()
-					.setMatricula(new CodeUtilities().registrationGenerator(this.theUserLoggedInService));
-			BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
-			jpgImage = this.theImageUtilities.cropSquare(jpgImage);
-			jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
-			theProprietario.getTheAutenticacaoSS()
-					.setNomeImgPerfil(this.prefix + theProprietario.getTheAutenticacaoSS().getMatricula()
-							+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
-			theProprietario.getTheAutenticacaoSS()
-					.setUriImgPerfil(this.theS3Service.uploadFile(
-							this.theImageUtilities.getInputStream(jpgImage,
-									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-							theProprietario.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
-			theProprietario.getTheAutenticacaoSS()
-					.setSenha(theBCryptPasswordEncoder.encode(theProprietario.getTheAutenticacaoSS().getSenha()));
-			return this.theIProprietarioRepository.save(theProprietario);
+	public void delete(Long id) {
+		try {
+			if (UserLoggedInService.authenticated() != null && this.theUserLoggedInService.userLoggedIn().getId() == id
+					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
+				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
+					this.theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
+				}
+				this.theIProprietarioRepository.deleteById(id);
+			} else {
+				throw new AuthorizationException(
+						"Acesso negado! - Você não possui permissão para excluir esta Proprietario!");
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir porque há Proprietarios relacionadas");
 		}
-		return null;
 	}
-
+	
 	public Proprietario find(Long id) {
 
 		Optional<Proprietario> theProprietario = this.theIProprietarioRepository.findById(id);
@@ -101,7 +94,32 @@ public class ProprietarioServices {
 			throw new AuthorizationException("Acesso negado! - Você não possui permissão para executar esta ação!");
 		}
 	}
+	
+	@Transactional
+	public Proprietario insert(Proprietario theProprietario, MultipartFile theMultipartFile) {
+		if (UserLoggedInService.authenticated() != null
+				&& UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
+			theProprietario.getTheAutenticacaoSS()
+					.setMatricula(new CodeUtilities().registrationGenerator(this.theUserLoggedInService));
+			BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+			jpgImage = this.theImageUtilities.cropSquare(jpgImage);
+			jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
+			theProprietario.getTheAutenticacaoSS()
+					.setNomeImgPerfil(this.prefix + theProprietario.getTheAutenticacaoSS().getMatricula()
+							+ "/imgPerfil." + FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+			theProprietario.getTheAutenticacaoSS()
+					.setUriImgPerfil(this.theS3Service.uploadFile(
+							this.theImageUtilities.getInputStream(jpgImage,
+									FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
+							theProprietario.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
+			theProprietario.getTheAutenticacaoSS()
+					.setSenha(theBCryptPasswordEncoder.encode(theProprietario.getTheAutenticacaoSS().getSenha()));
+			return this.theIProprietarioRepository.save(theProprietario);
+		}
+		return null;
+	}
 
+	
 	public Proprietario update(Proprietario theProprietario, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() != null
@@ -132,22 +150,5 @@ public class ProprietarioServices {
 			throw new AuthorizationException(
 					"Acesso negado! - Você não possui permissão para Alterar esta Proprietario!");
 		}
-	}
-
-	public void delete(Long id) {
-		try {
-			if (UserLoggedInService.authenticated() != null && this.theUserLoggedInService.userLoggedIn().getId() == id
-					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
-				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
-					this.theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
-				}
-				this.theIProprietarioRepository.deleteById(id);
-			} else {
-				throw new AuthorizationException(
-						"Acesso negado! - Você não possui permissão para excluir esta Proprietario!");
-			}
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir porque há Proprietarios relacionadas");
-		}
-	}
+	}	
 }

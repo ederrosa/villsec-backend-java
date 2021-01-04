@@ -46,26 +46,23 @@ public class AlbumServices {
 	@Value("${image.profile.size}")
 	private Integer size;
 
-	@Transactional
-	public Album insert(Album theEntidade, MultipartFile theMultipartFile) {
+	public void delete(Long id) {
 
 		if (UserLoggedInService.authenticated() == null
-				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
+				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		theEntidade.setId(null);
-		theEntidade.setCodigo(new CodeUtilities().albumCode(this.theAlbumRepository));
-		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
-		String fileName = this.prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
-				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-		Arquivo theFile = new Arquivo(null, fileName,
-				this.theS3Service.uploadFile(
-						this.theImageUtilities.getInputStream(jpgImage,
-								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						fileName, theMultipartFile.getContentType()));
-		theEntidade.setCapa(theFile);
-		return this.theAlbumRepository.save(theEntidade);
+		try {
+			if (find(id).getCapa() != null) {
+				this.theS3Service.deleteFile(find(id).getCapa().getNome());
+			}
+			for (Musica theMusica : this.theMusicaServices.findAll(this.find(id))) {
+				this.theMusicaServices.delete(theMusica.getId());
+			}
+			this.theAlbumRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
+		}
 	}
 
 	public Album find(Long id) {
@@ -103,23 +100,25 @@ public class AlbumServices {
 		return this.theAlbumRepository.save(theEntidade);
 	}
 
-	public void delete(Long id) {
+	@Transactional
+	public Album insert(Album theEntidade, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() == null
-				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
+				&& !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		try {
-			if (find(id).getCapa() != null) {
-				this.theS3Service.deleteFile(find(id).getCapa().getNome());
-			}
-			for (Musica theMusica : this.theMusicaServices.findAll(this.find(id))) {
-				this.theMusicaServices.delete(theMusica.getId());
-			}
-			this.theAlbumRepository.deleteById(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir porque há Entidades relacionadas");
-		}
+		theEntidade.setId(null);
+		theEntidade.setCodigo(new CodeUtilities().albumCode(this.theAlbumRepository));
+		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		jpgImage = this.theImageUtilities.resize(jpgImage, this.size);
+		String fileName = this.prefix + theEntidade.getNome() + "/" + theEntidade.getNome() + "."
+				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		Arquivo theFile = new Arquivo(null, fileName,
+				this.theS3Service.uploadFile(
+						this.theImageUtilities.getInputStream(jpgImage,
+								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
+						fileName, theMultipartFile.getContentType()));
+		theEntidade.setCapa(theFile);
+		return this.theAlbumRepository.save(theEntidade);
 	}
-
 }

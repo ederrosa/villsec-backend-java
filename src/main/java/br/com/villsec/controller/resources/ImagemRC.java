@@ -28,18 +28,15 @@ public class ImagemRC {
 
 	@Autowired
 	private ImagemServices theElementoServices;
-
+	
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid ImagemDTO objNewDTO,
-			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile,
-			@RequestParam(value = "galeriaID") String theGaleria) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theElementoServices
-				.insert(new ImagemVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theGaleria)).getId())
-				.toUri();
-		return ResponseEntity.created(uri).build();
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		find(id);
+		theElementoServices.delete(id);
+		return ResponseEntity.noContent().build();
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ImagemDTO> find(@PathVariable Long id) {
 		ImagemDTO obj = new ImagemDTO(theElementoServices.find(id));
@@ -50,11 +47,20 @@ public class ImagemRC {
 	public ResponseEntity<Page<ImagemDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "titulo") String orderBy,
-			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
-			@RequestParam(value = "theGaleria") Long theGaleria) {
-		Page<Imagem> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction, theGaleria);
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+		Page<Imagem> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction);
 		Page<ImagemDTO> listDTO = list.map(obj -> new ImagemDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
+	}
+
+	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid ImagemDTO objNewDTO,
+			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theElementoServices
+				.insert(new ImagemVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
@@ -66,13 +72,5 @@ public class ImagemRC {
 		new ImagemVHWeb().update(theElemento, objDTO);
 		theElemento = theElementoServices.update(theElemento, theMultipartFile);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		find(id);
-		theElementoServices.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+	}	
 }

@@ -7,7 +7,7 @@ public class VideoVHWeb {
 
 	public Video create(VideoDTO objDTO) {
 
-		return new Video(null, objDTO.getDescricao(), objDTO.getEmbed(), null, null, objDTO.getTitulo());
+		return new Video(null, objDTO.getDescricao(), objDTO.getEmbed(), null, objDTO.getTitulo());
 	}
 
 	public void update(Video theVideo, VideoDTO objDTO) {

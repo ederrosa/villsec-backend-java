@@ -17,12 +17,6 @@ import org.hibernate.annotations.DynamicInsert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.villsec.model.entities.domain.AutenticacaoSS;
-import br.com.villsec.model.entities.domain.Email;
-import br.com.villsec.model.entities.domain.Endereco;
-import br.com.villsec.model.entities.domain.EntidadeDominio;
-import br.com.villsec.model.entities.domain.Telefone;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DynamicInsert

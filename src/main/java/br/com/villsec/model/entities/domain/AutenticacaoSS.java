@@ -17,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.villsec.model.entities.domain.EntidadeDominio;
 import br.com.villsec.model.entities.enums.Perfil;
 
 @Entity

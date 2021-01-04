@@ -12,12 +12,16 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @MappedSuperclass
+@DynamicInsert
+@DynamicUpdate
 public class EntidadeDominio implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -32,10 +32,9 @@ public class VideoRC {
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid VideoDTO objNewDTO,
-			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile,
-			@RequestParam(value = "galeriaID") String theGaleria) {
+			@RequestPart(name = "file", required = false) MultipartFile theMultipartFile) {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(theElementoServices
-				.insert(new VideoVHWeb().create(objNewDTO), theMultipartFile, Long.parseLong(theGaleria)).getId())
+				.insert(new VideoVHWeb().create(objNewDTO), theMultipartFile).getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
@@ -49,10 +48,10 @@ public class VideoRC {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Page<VideoDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
-			@RequestParam(value = "orderBy", defaultValue = "titulo") String orderBy,
-			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "orderBy", defaultValue = "dtCriacao") String orderBy,
+			@RequestParam(value = "direction", defaultValue = "DESC") String direction,
 			@RequestParam(value = "theGaleria") Long theGaleria) {
-		Page<Video> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction, theGaleria);
+		Page<Video> list = theElementoServices.findAllPage(page, linesPerPage, orderBy, direction);
 		Page<VideoDTO> listDTO = list.map(obj -> new VideoDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}

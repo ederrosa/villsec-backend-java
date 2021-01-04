@@ -28,17 +28,15 @@ public class SeguidorRC {
 
 	@Autowired
 	private SeguidorServices theSeguidorServices;
-
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid SeguidorDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(
-						theSeguidorServices.insert(new SeguidorVHWeb().create(objNewDTO), theMultipartFile).getId())
-				.toUri();
-		return ResponseEntity.created(uri).build();
+	
+	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('SEGUIDOR')")
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		find(id);
+		theSeguidorServices.delete(id);
+		return ResponseEntity.noContent().build();
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<SeguidorDTO> find(@PathVariable Long id) {
 		SeguidorDTO obj = new SeguidorDTO(theSeguidorServices.find(id));
@@ -55,6 +53,16 @@ public class SeguidorRC {
 		return ResponseEntity.ok().body(listDTO);
 	}
 
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid SeguidorDTO objNewDTO,
+			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(
+						theSeguidorServices.insert(new SeguidorVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
+	}	
+
 	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('SEGUIDOR')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid SeguidorDTO objDTO, @PathVariable Long id,
@@ -64,13 +72,5 @@ public class SeguidorRC {
 		new SeguidorVHWeb().update(theSeguidor, objDTO);
 		theSeguidor = theSeguidorServices.update(theSeguidor, theMultipartFile);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('SEGUIDOR')")
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		find(id);
-		theSeguidorServices.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+	}	
 }

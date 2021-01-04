@@ -28,16 +28,19 @@ public class EventoRC {
 
 	@Autowired
 	private EventoServices theEventoServices;
+	
+	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		this.theEventoServices.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid EventoDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(
-						this.theEventoServices.insert(new EventoVHWeb().create(objNewDTO), theMultipartFile).getId())
-				.toUri();
-		return ResponseEntity.created(uri).build();
+	@RequestMapping(value = "/alertas/{id}", method = RequestMethod.OPTIONS)
+	public ResponseEntity<Void> enviarAlerta(@PathVariable Long id) {
+		this.theEventoServices.enviarAlerta(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -55,6 +58,17 @@ public class EventoRC {
 		Page<EventoDTO> listDTO = list.map(obj -> new EventoDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
+	
+	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid EventoDTO objNewDTO,
+			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(
+						this.theEventoServices.insert(new EventoVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
+	}	
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -65,19 +79,5 @@ public class EventoRC {
 		new EventoVHWeb().update(theEvento, objDTO);
 		theEvento = this.theEventoServices.update(theEvento, theMultipartFile);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		this.theEventoServices.delete(id);
-		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/alertas/{id}", method = RequestMethod.OPTIONS)
-	public ResponseEntity<Void> enviarAlerta(@PathVariable Long id) {
-		this.theEventoServices.enviarAlerta(id);
-		return ResponseEntity.noContent().build();
-	}
+	}	
 }

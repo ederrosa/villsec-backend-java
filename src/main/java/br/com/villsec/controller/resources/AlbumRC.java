@@ -28,15 +28,13 @@ public class AlbumRC {
 
 	@Autowired
 	private AlbumServices theAlbumServices;
-
+	
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid AlbumDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(theAlbumServices.insert(new AlbumVHWeb().create(objNewDTO), theMultipartFile).getId())
-				.toUri();
-		return ResponseEntity.created(uri).build();
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		find(id);
+		theAlbumServices.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -54,6 +52,16 @@ public class AlbumRC {
 		Page<AlbumDTO> listDTO = list.map(obj -> new AlbumDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
+	
+	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid AlbumDTO objNewDTO,
+			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(theAlbumServices.insert(new AlbumVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
+	}
 
 	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -63,14 +71,6 @@ public class AlbumRC {
 		Album theAlbum = theAlbumServices.find(id);
 		new AlbumVHWeb().update(theAlbum, objDTO);
 		theAlbum = theAlbumServices.update(theAlbum, theMultipartFile);
-		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		find(id);
-		theAlbumServices.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 }

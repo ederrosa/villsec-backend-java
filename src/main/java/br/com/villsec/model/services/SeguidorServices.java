@@ -16,16 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.villsec.model.services.S3Service;
-import br.com.villsec.model.services.UserLoggedInService;
-import br.com.villsec.model.services.utilities.ImageUtilities;
 import br.com.villsec.model.entities.domain.Seguidor;
 import br.com.villsec.model.entities.enums.Perfil;
+import br.com.villsec.model.repository.ISeguidorRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
 import br.com.villsec.model.services.exceptions.DataIntegrityException;
 import br.com.villsec.model.services.exceptions.ObjectNotFoundException;
 import br.com.villsec.model.services.utilities.CodeUtilities;
-import br.com.villsec.model.repository.ISeguidorRepository;
+import br.com.villsec.model.services.utilities.ImageUtilities;
 
 @Service
 public class SeguidorServices {
@@ -50,28 +48,24 @@ public class SeguidorServices {
 
 	@Value("${image.profile.size}")
 	private Integer size;
-
-	@Transactional
-	public Seguidor insert(Seguidor theSeguidor, MultipartFile theMultipartFile) {
-
-		theSeguidor.getTheAutenticacaoSS()
-				.setMatricula(new CodeUtilities().registrationGenerator(theUserLoggedInService));
-		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		jpgImage = theImageUtilities.cropSquare(jpgImage);
-		jpgImage = theImageUtilities.resize(jpgImage, size);
-		theSeguidor.getTheAutenticacaoSS()
-				.setNomeImgPerfil(this.prefix + theSeguidor.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
-						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
-		theSeguidor.getTheAutenticacaoSS()
-				.setUriImgPerfil(this.theS3Service.uploadFile(
-						this.theImageUtilities.getInputStream(jpgImage,
-								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						theSeguidor.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
-		theSeguidor.getTheAutenticacaoSS()
-				.setSenha(this.theBCryptPasswordEncoder.encode(theSeguidor.getTheAutenticacaoSS().getSenha()));
-		return theISeguidorRepository.save(theSeguidor);
+	
+	public void delete(Long id) {
+		try {
+			if (UserLoggedInService.authenticated() != null && theUserLoggedInService.userLoggedIn().getId() == id
+					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
+				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
+					this.theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
+				}
+				this.theISeguidorRepository.deleteById(id);
+			} else {
+				throw new AuthorizationException(
+						"Acesso negado! - Você não possui permissão para excluir esta Seguidor!");
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir porque há Seguidors relacionadas");
+		}
 	}
-
+	
 	public Seguidor find(Long id) {
 
 		if (UserLoggedInService.authenticated() == null) {
@@ -106,6 +100,27 @@ public class SeguidorServices {
 		}
 	}
 
+	@Transactional
+	public Seguidor insert(Seguidor theSeguidor, MultipartFile theMultipartFile) {
+
+		theSeguidor.getTheAutenticacaoSS()
+				.setMatricula(new CodeUtilities().registrationGenerator(theUserLoggedInService));
+		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		jpgImage = theImageUtilities.cropSquare(jpgImage);
+		jpgImage = theImageUtilities.resize(jpgImage, size);
+		theSeguidor.getTheAutenticacaoSS()
+				.setNomeImgPerfil(this.prefix + theSeguidor.getTheAutenticacaoSS().getMatricula() + "/imgPerfil."
+						+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename()));
+		theSeguidor.getTheAutenticacaoSS()
+				.setUriImgPerfil(this.theS3Service.uploadFile(
+						this.theImageUtilities.getInputStream(jpgImage,
+								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
+						theSeguidor.getTheAutenticacaoSS().getNomeImgPerfil(), "image"));
+		theSeguidor.getTheAutenticacaoSS()
+				.setSenha(this.theBCryptPasswordEncoder.encode(theSeguidor.getTheAutenticacaoSS().getSenha()));
+		return theISeguidorRepository.save(theSeguidor);
+	}	
+
 	public Seguidor update(Seguidor theSeguidor, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() != null
@@ -135,22 +150,5 @@ public class SeguidorServices {
 		} else {
 			throw new AuthorizationException("Acesso negado! - Você não possui permissão para Alterar esta Seguidor!");
 		}
-	}
-
-	public void delete(Long id) {
-		try {
-			if (UserLoggedInService.authenticated() != null && theUserLoggedInService.userLoggedIn().getId() == id
-					|| UserLoggedInService.authenticated().hasRole(Perfil.ADMINISTRADOR)) {
-				if (find(id).getTheAutenticacaoSS().getNomeImgPerfil() != null) {
-					this.theS3Service.deleteFile(find(id).getTheAutenticacaoSS().getNomeImgPerfil());
-				}
-				this.theISeguidorRepository.deleteById(id);
-			} else {
-				throw new AuthorizationException(
-						"Acesso negado! - Você não possui permissão para excluir esta Seguidor!");
-			}
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir porque há Seguidors relacionadas");
-		}
-	}
+	}	
 }

@@ -14,9 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.villsec.model.entities.domain.Imagem;
 import br.com.villsec.model.entities.domain.Arquivo;
-import br.com.villsec.model.entities.domain.Galeria;
+import br.com.villsec.model.entities.domain.Imagem;
 import br.com.villsec.model.entities.enums.Perfil;
 import br.com.villsec.model.repository.IImagemRepository;
 import br.com.villsec.model.services.exceptions.AuthorizationException;
@@ -31,9 +30,6 @@ public class ImagemServices {
 	private IImagemRepository theIImagemRepository;
 
 	@Autowired
-	private GaleriaServices theGaleriaService;
-
-	@Autowired
 	private S3Service theS3Service;
 
 	@Autowired
@@ -43,16 +39,13 @@ public class ImagemServices {
 	private String prefix;
 
 	@Transactional
-	public Imagem insert(Imagem theEntidade, MultipartFile theMultipartFile, Long theGaleriaID) {
+	public Imagem insert(Imagem theEntidade, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() == null
 				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
 		theEntidade.setId(null);
-		Galeria theGaleria = this.theGaleriaService.find(theGaleriaID);
-		theGaleria.getTheImagens().add(theEntidade);
-		theEntidade.setTheGaleria(theGaleria);
 		if (theMultipartFile != null && !theMultipartFile.isEmpty()) {
 			String fileName = this.prefix + "/" + theEntidade.getTitulo() + "."
 					+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
@@ -70,14 +63,13 @@ public class ImagemServices {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Imagem.class.getSimpleName()));
 	}
 
-	public List<Imagem> findAll(Galeria theGaleria) {
-		return this.theIImagemRepository.findAllByTheGaleria(theGaleria);
+	public List<Imagem> findAll() {
+		return this.theIImagemRepository.findAll();
 	}
 
-	public Page<Imagem> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction,
-			Long theGaleriaID) {
+	public Page<Imagem> findAllPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		return this.theIImagemRepository.findAllByTheGaleria(this.theGaleriaService.find(theGaleriaID), pageRequest);
+		return this.theIImagemRepository.findAll(pageRequest);
 	}
 
 	public Imagem update(Imagem theEntidade, MultipartFile theMultipartFile) {

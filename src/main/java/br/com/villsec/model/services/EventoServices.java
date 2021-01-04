@@ -56,24 +56,40 @@ public class EventoServices {
 	@Value("${default.principal}")
 	private Long proprietarioId;
 
-	@Transactional
-	public Evento insert(Evento theEvento, MultipartFile theMultipartFile) {
+	public void delete(Long id) {
 
 		if (UserLoggedInService.authenticated() == null
 				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		theEvento.setId(null);
-		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
-		String fileName = this.prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
-				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
-		Arquivo theFile = new Arquivo(null, fileName,
-				this.theS3Service.uploadFile(
-						this.theImageUtilities.getInputStream(jpgImage,
-								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
-						fileName, theMultipartFile.getContentType()));
-		theEvento.setFolder(theFile);
-		return this.theEventoRepository.save(theEvento);
+		try {
+			if (find(id).getFolder() != null) {
+				this.theS3Service.deleteFile(find(id).getFolder().getNome());
+			}
+			this.theEventoRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir porque há Eventos relacionados");
+		}
+	}
+
+	public void enviarAlerta(Long id) {
+		if (UserLoggedInService.authenticated() == null
+				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Evento theEvento = this.find(id);
+		if (theEvento.isAlerta()) {
+			throw new AuthorizationException(
+					"Acesso negado, alertas ja foram enviados anteriormente para este evento!!");
+		}
+		Proprietario theProprietario = this.theProprietarioServices.find(this.proprietarioId);
+		List<Seguidor> theSeguidorList = this.theSeguidoServices
+				.findAllByCidade(theEvento.getTheEndereco().getCidade());
+		for (Seguidor theSeguidor : theSeguidorList) {
+			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail(), theProprietario);
+		}
+		theEvento.setAlerta(true);
+		this.theEventoRepository.save(theEvento);
 	}
 
 	public Evento find(Long id) {
@@ -109,39 +125,23 @@ public class EventoServices {
 		return this.theEventoRepository.save(theEvento);
 	}
 
-	public void delete(Long id) {
+	@Transactional
+	public Evento insert(Evento theEvento, MultipartFile theMultipartFile) {
 
 		if (UserLoggedInService.authenticated() == null
 				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		try {
-			if (find(id).getFolder() != null) {
-				this.theS3Service.deleteFile(find(id).getFolder().getNome());
-			}
-			this.theEventoRepository.deleteById(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir porque há Eventos relacionados");
-		}
-	}
-
-	public void enviarAlerta(Long id) {
-		if (UserLoggedInService.authenticated() == null
-				|| !UserLoggedInService.authenticated().hasRole(Perfil.PROPRIETARIO)) {
-			throw new AuthorizationException("Acesso negado");
-		}
-		Evento theEvento = this.find(id);
-		if (theEvento.isAlerta()) {
-			throw new AuthorizationException(
-					"Acesso negado, alertas ja foram enviados anteriormente para este evento!!");
-		}
-		Proprietario theProprietario = this.theProprietarioServices.find(this.proprietarioId);
-		List<Seguidor> theSeguidorList = this.theSeguidoServices
-				.findAllByCidade(theEvento.getTheEndereco().getCidade());
-		for (Seguidor theSeguidor : theSeguidorList) {
-			this.theIEmailServices.sendAlertaEventoHtmlEmail(theEvento, theSeguidor.getTheEmail(), theProprietario);
-		}
-		theEvento.setAlerta(true);
-		this.theEventoRepository.save(theEvento);
+		theEvento.setId(null);
+		BufferedImage jpgImage = this.theImageUtilities.getJpgImageFromFile(theMultipartFile);
+		String fileName = this.prefix + theEvento.getTipoEvento().getDescricao() + "/" + theEvento.getNome() + "."
+				+ FilenameUtils.getExtension(theMultipartFile.getOriginalFilename());
+		Arquivo theFile = new Arquivo(null, fileName,
+				this.theS3Service.uploadFile(
+						this.theImageUtilities.getInputStream(jpgImage,
+								FilenameUtils.getExtension(theMultipartFile.getOriginalFilename())),
+						fileName, theMultipartFile.getContentType()));
+		theEvento.setFolder(theFile);
+		return this.theEventoRepository.save(theEvento);
 	}
 }

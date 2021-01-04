@@ -29,16 +29,14 @@ public class ProprietarioRC {
 	@Autowired
 	private ProprietarioServices theProprietarioServices;
 
-	@PreAuthorize("hasAnyRole('ADMINISTRADOR')")
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid ProprietarioDTO objNewDTO,
-			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
-				theProprietarioServices.insert(new ProprietarioVHWeb().create(objNewDTO), theMultipartFile).getId())
-				.toUri();
-		return ResponseEntity.created(uri).build();
+	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('PROPRIETARIO')")
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		find(id);
+		theProprietarioServices.delete(id);
+		return ResponseEntity.noContent().build();
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ProprietarioDTO> find(@PathVariable Long id) {
 		ProprietarioDTO obj = new ProprietarioDTO(theProprietarioServices.find(id));
@@ -56,6 +54,18 @@ public class ProprietarioRC {
 		Page<ProprietarioDTO> listDTO = list.map(obj -> new ProprietarioDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}
+	
+	@PreAuthorize("hasAnyRole('ADMINISTRADOR')")
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid ProprietarioDTO objNewDTO,
+			@RequestPart(name = "file", required = true) MultipartFile theMultipartFile) {
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
+				theProprietarioServices.insert(new ProprietarioVHWeb().create(objNewDTO), theMultipartFile).getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
+	}
+
+	
 
 	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('PROPRIETARIO')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -66,13 +76,5 @@ public class ProprietarioRC {
 		new ProprietarioVHWeb().update(theProprietario, objDTO);
 		theProprietario = theProprietarioServices.update(theProprietario, theMultipartFile);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PreAuthorize("hasAnyRole('ADMINISTRADOR') OR hasAnyRole('PROPRIETARIO')")
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		find(id);
-		theProprietarioServices.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+	}	
 }

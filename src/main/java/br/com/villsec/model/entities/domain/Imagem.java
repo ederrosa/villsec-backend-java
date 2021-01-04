@@ -4,7 +4,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -19,20 +18,16 @@ public class Imagem extends EntidadeDominio {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "File_ID")
 	private Arquivo theArquivo;
-	@ManyToOne
-	@JoinColumn(name = "GALERIA_ID")
-	private Galeria theGaleria;
 	@Column(columnDefinition = "VARCHAR(100)")
 	private String titulo;
 
 	public Imagem() {
 	}
 
-	public Imagem(Long id, String descricao, Arquivo theArquivo, Galeria theGaleria, String titulo) {
+	public Imagem(Long id, String descricao, Arquivo theArquivo, String titulo) {
 		super(id);
 		this.descricao = descricao;
 		this.theArquivo = theArquivo;
-		this.theGaleria = theGaleria;
 		this.titulo = titulo;
 	}
 
@@ -50,14 +45,6 @@ public class Imagem extends EntidadeDominio {
 
 	public void setTheArquivo(Arquivo theArquivo) {
 		this.theArquivo = theArquivo;
-	}
-
-	public Galeria getTheGaleria() {
-		return theGaleria;
-	}
-
-	public void setTheGaleria(Galeria theGaleria) {
-		this.theGaleria = theGaleria;
 	}
 
 	public String getTitulo() {
